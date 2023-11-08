@@ -1,4 +1,4 @@
-import { Container, Heading, Flex, Box, Spacer, Button } from "@chakra-ui/react";
+import { Heading, Flex, Box, Spacer, Button } from "@chakra-ui/react";
 import { Link, Outlet } from "@remix-run/react";
 const filePath = "routes/clientes.tsx";
 
