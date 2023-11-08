@@ -23,7 +23,7 @@ export default function Usuarios() {
     return (<>
         <p>Hola</p>
         <ul>
-            {usuarios.map((u,k) => <li key={k}>{u.name}</li>)}
+            {usuarios.map((u, k) => <li key={k}>{u.name}</li>)}
         </ul>
     </>)
 }
