@@ -26,12 +26,11 @@ import {
     MdOutlineEmail,
 } from 'react-icons/md'
 
-import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs'
+import { BsGithub, BsDiscord, BsPerson, BsReddit } from 'react-icons/bs'
 
 export default function DashboardClienteCreate() {
 
     return (<>
-
         <Box maxW='lg' borderWidth='1px' borderRadius='lg' overflow='hidden'>
             <Box m={8}>
                 <VStack spacing={5}>
@@ -61,8 +60,5 @@ export default function DashboardClienteCreate() {
                 </VStack>
             </Box>
         </Box>
-
-
-
     </>);
 }

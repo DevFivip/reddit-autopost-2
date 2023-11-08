@@ -102,6 +102,8 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
       }
     >
       <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+
         <Meta />
         <Links />
         {serverStyleData?.map(({ key, ids, css }) => (
