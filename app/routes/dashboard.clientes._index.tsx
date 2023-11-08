@@ -1,7 +1,68 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet, Link } from "@remix-run/react";
 
-const filePath = "routes/dashboard.tsx";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  Flex,
+  Center,
+  Text, Square, Box
+} from '@chakra-ui/react'
+
+
+const filePath = "routes/dashboard.clientes._index.tsx";
 
 export default function DashboardClienteLayout() {
-  return (<> {' Esto es el Layout'} <br /> {'Dashboard-Cliente:'} {filePath} <br /> <br /> <Outlet /></>);
+  return (<>
+    <Flex color='white'>
+      <Box flex='1'>
+        <TableContainer>
+          <Table variant='simple'>
+            <Thead>
+              <Tr>
+                <Th>To convert</Th>
+                <Th>into</Th>
+                <Th isNumeric>multiply by</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>inches</Td>
+                <Td>millimetres (mm)</Td>
+                <Td isNumeric>25.4</Td>
+              </Tr>
+              <Tr>
+                <Td>feet</Td>
+                <Td>centimetres (cm)</Td>
+                <Td isNumeric>30.48</Td>
+              </Tr>
+              <Tr>
+                <Td>yards</Td>
+                <Td>metres (m)</Td>
+                <Td isNumeric>0.91444</Td>
+              </Tr>
+            </Tbody>
+            <Tfoot>
+              <Tr>
+                <Th>To convert</Th>
+                <Th>into</Th>
+                <Th isNumeric>multiply by</Th>
+              </Tr>
+            </Tfoot>
+          </Table>
+        </TableContainer>
+      </Box>
+    </Flex>
+
+
+
+    <Outlet />
+
+  </>);
 }

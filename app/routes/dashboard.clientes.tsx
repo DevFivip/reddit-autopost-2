@@ -1,19 +1,24 @@
+import { Container, Heading, Flex, Box, Spacer, Button } from "@chakra-ui/react";
 import { Link, Outlet } from "@remix-run/react";
-const filePath = "routes/actors.tsx";
+const filePath = "routes/clientes.tsx";
 
 export default function DashboardClienteLayout() {
   return (
     <>
-      {" Esto es el Layout"} <br /> {"Clientes dentro de Dashboard :"}{" "}
+      <Flex>
+        <Heading as='h2' size='xl'>
+          <Link to="/dashboard/clientes">
+            Clientes
+          </Link>
+        </Heading>
+        <Spacer />
+        <Link to={'/dashboard/clientes/create'}>
+          <Button colorScheme='teal' variant='outline'>
+            Nuevo
+          </Button>
+        </Link>
+      </Flex>
       {filePath} <br /> <br />
-      <ul>
-        <li>
-          <Link to="adolfo">Adolfo </Link>{" "}
-        </li>
-        <li>
-          <Link to="guillermo">guillermo </Link>{" "}
-        </li>
-      </ul>
       <Outlet />
     </>
   );
