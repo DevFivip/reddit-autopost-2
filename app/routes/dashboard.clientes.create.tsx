@@ -1,22 +1,13 @@
 import {
-    Container,
     Flex,
     Box,
-    Heading,
-    Text,
-    IconButton,
     Button,
     VStack,
-    HStack,
-    Wrap,
-    WrapItem,
     FormControl,
     FormLabel,
     Input,
     InputGroup,
     InputLeftElement,
-    Textarea,
-    Divider,
     Heading,
     Spacer,
     Stack,
@@ -24,14 +15,10 @@ import {
 } from '@chakra-ui/react'
 
 import {
-    MdPhone,
-    MdEmail,
-    MdLocationOn,
-    MdFacebook,
     MdOutlineEmail
 } from 'react-icons/md'
 
-import { BsGithub, BsDiscord, BsPerson, BsReddit, BsImage } from 'react-icons/bs'
+import {BsPerson, BsReddit, BsImage } from 'react-icons/bs'
 
 export default function DashboardClienteCreate() {
 

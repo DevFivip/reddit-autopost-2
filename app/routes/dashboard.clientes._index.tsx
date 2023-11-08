@@ -1,4 +1,4 @@
-import { Outlet, Link } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 
 import {
   Table,
@@ -8,15 +8,10 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   Flex,
-  Center,
-  Text, Square, Box
+  Box
 } from '@chakra-ui/react'
-
-
-const filePath = "routes/dashboard.clientes._index.tsx";
 
 export default function DashboardClienteLayout() {
   return (<>
