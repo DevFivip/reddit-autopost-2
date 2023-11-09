@@ -14,6 +14,8 @@ export type TypeUsuarios = {
     imgur_password: string;
     imgur_clientId: string;
     imgur_clientSecret: string;
+    created_at: string;
+    updated_at: string;
 };
 
 export type NewTypeUsuarios = {

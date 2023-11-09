@@ -31,7 +31,7 @@ db.serialize(function () {
 });
 
 db.serialize(function () {
-    db.run(`CREATE TRIGGER actualizar_fecha_modificacion
+    db.run(`CREATE TRIGGER IF NOT EXISTS actualizar_fecha_modificacion
     AFTER UPDATE ON usuarios
     FOR EACH ROW
     BEGIN

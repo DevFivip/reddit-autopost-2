@@ -16,9 +16,12 @@ import {
 } from '@chakra-ui/react'
 
 import { all, TypeUsuarios } from "~/models/usuario";
+import MomentComponent from "~/components/util/moment";
 
 export async function loader() {
-  return (await all());
+  const us = await all();
+  console.log(us)
+  return (us);
 }
 
 
