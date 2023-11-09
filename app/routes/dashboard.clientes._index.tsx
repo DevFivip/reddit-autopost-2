@@ -1,5 +1,5 @@
 import { Outlet } from "@remix-run/react";
-
+import { useLoaderData } from "@remix-run/react";
 import {
   Table,
   Thead,
@@ -10,10 +10,21 @@ import {
   Td,
   TableContainer,
   Flex,
-  Box
+  Box,
+  ButtonGroup,
+  Button
 } from '@chakra-ui/react'
 
+import { all, TypeUsuarios } from "~/models/usuario";
+
+export async function loader() {
+  return (await all());
+}
+
+
 export default function DashboardClienteLayout() {
+
+  const usuarios: TypeUsuarios[] = useLoaderData();
   return (<>
     <Flex color='white'>
       <Box flex='1'>
@@ -24,32 +35,23 @@ export default function DashboardClienteLayout() {
                 <Th>To convert</Th>
                 <Th>into</Th>
                 <Th isNumeric>multiply by</Th>
+                <Th isNumeric>Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>inches</Td>
+              {usuarios.map((u,i) => <Tr key={i}>
+                <Td>{u.nombre}</Td>
                 <Td>millimetres (mm)</Td>
                 <Td isNumeric>25.4</Td>
+                <Td isNumeric >
+                  <ButtonGroup gap='4'>
+                    <Button>Editar</Button>
+                    <Button>Eliminar</Button>
+                  </ButtonGroup>
+                </Td>
               </Tr>
-              <Tr>
-                <Td>feet</Td>
-                <Td>centimetres (cm)</Td>
-                <Td isNumeric>30.48</Td>
-              </Tr>
-              <Tr>
-                <Td>yards</Td>
-                <Td>metres (m)</Td>
-                <Td isNumeric>0.91444</Td>
-              </Tr>
+              )}
             </Tbody>
-            <Tfoot>
-              <Tr>
-                <Th>To convert</Th>
-                <Th>into</Th>
-                <Th isNumeric>multiply by</Th>
-              </Tr>
-            </Tfoot>
           </Table>
         </TableContainer>
       </Box>
