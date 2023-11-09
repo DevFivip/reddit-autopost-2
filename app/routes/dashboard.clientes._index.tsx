@@ -15,19 +15,44 @@ import {
   Button
 } from '@chakra-ui/react'
 
-import { all, TypeUsuarios } from "~/models/usuario";
-import MomentComponent from "~/components/util/moment";
+import { useRevalidator } from "@remix-run/react";
+
+import { all, TypeCliente } from "~/models/cliente";
 
 export async function loader() {
   const us = await all();
-  console.log(us)
   return (us);
 }
 
 
 export default function DashboardClienteLayout() {
+  const revalidator = useRevalidator();
 
-  const usuarios: TypeUsuarios[] = useLoaderData();
+  const handleDeleteCliente = async (id: string | number) => {
+    try {
+      const response = await fetch(`/dashboard/clientes/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Puedes incluir otras cabeceras según sea necesario
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al eliminar el cliente: ${response.statusText}`);
+      }
+      revalidator.revalidate();
+      // Aquí podrías actualizar tu estado de frontend o realizar otras acciones necesarias.
+
+    } catch (error: any) {
+      console.error('Error en la solicitud DELETE:', error.message);
+      // Manejar el error según sea necesario
+    }
+  }
+
+
+
+  const clientes: TypeCliente[] = useLoaderData();
   return (<>
     <Flex color='white'>
       <Box flex='1'>
@@ -42,7 +67,7 @@ export default function DashboardClienteLayout() {
               </Tr>
             </Thead>
             <Tbody>
-              {usuarios.map((u, i) => <Tr key={i}>
+              {clientes.map((u, i) => <Tr key={i}>
                 <Td>{u.nombre}</Td>
                 <Td>millimetres (mm)</Td>
                 <Td isNumeric>25.4</Td>
@@ -51,7 +76,7 @@ export default function DashboardClienteLayout() {
                     <Link to={`${u.id}`}>
                       <Button>Editar</Button>
                     </Link>
-                    <Button>Eliminar</Button>
+                    <Button onClick={() => handleDeleteCliente(u.id)}>Eliminar</Button>
                   </ButtonGroup>
                 </Td>
               </Tr>

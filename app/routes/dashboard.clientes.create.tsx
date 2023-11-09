@@ -4,12 +4,12 @@ import { Form } from '@remix-run/react';
 import { redirect } from "@remix-run/node"; // or cloudflare/deno
 
 import { ActionFunctionArgs } from '@remix-run/node';
-import { NewTypeUsuarios, create } from '~/models/usuario';
+import { NewTypeCliente, create } from '~/models/cliente';
 import { ComponentClienteFormulario } from '~/components/clientes/formulario'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const form = await request.formData();
-    const usuario: NewTypeUsuarios = {
+    const cliente: NewTypeCliente = {
         nombre: form.get('nombre') as string,
         email: form.get('email') as string,
         reddit_username: form.get('reddit_username') as string,
@@ -21,8 +21,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         imgur_clientId: form.get('imgur_clientId') as string,
         imgur_clientSecret: form.get('imgur_clientSecret') as string
     }
-    console.log({usuario})
-    await create(usuario);
+    // console.log({cliente})
+    await create(cliente);
     return redirect(`/dashboard/clientes`);
 };
 

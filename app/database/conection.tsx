@@ -10,9 +10,9 @@ const db = new Database("database.db");
 //     'SELECT RANDOM() % 100 as result',
 //     (_, res) => console.log(res)
 // );
-// Crea una tabla llamada 'usuarios'
+// Crea una tabla llamada 'clientes'
 db.serialize(function () {
-    db.run(`CREATE TABLE IF NOT EXISTS usuarios (
+    db.run(`CREATE TABLE IF NOT EXISTS clientes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT,
         email TEXT,
@@ -32,10 +32,10 @@ db.serialize(function () {
 
 db.serialize(function () {
     db.run(`CREATE TRIGGER IF NOT EXISTS actualizar_fecha_modificacion
-    AFTER UPDATE ON usuarios
+    AFTER UPDATE ON clientes
     FOR EACH ROW
     BEGIN
-      UPDATE usuarios SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+      UPDATE clientes SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
     END`);
 });
 
@@ -46,15 +46,15 @@ db.serialize(function () {
         imagen_name TEXT,
         imagen_link_imgur TEXT,
         contenido TEXT,
-        usuario_id INTEGER,
+        cliente_id INTEGER,
         fecha_creacion DATETIME,
         fecha_publicacion DATETIME,
         status INT,
-        FOREIGN KEY(usuario_id) REFERENCES usuarios(id))`);
+        FOREIGN KEY(cliente_id) REFERENCES clientes(id))`);
 });
 
 db.serialize(function () {
-    db.run(`CREATE TABLE  IF NOT EXISTS gallery (
+    db.run(`CREATE TABLE  IF NOT EXISTS galleries (
         id INTEGER PRIMARY KEY,
         tags TEXT,
         archivo_nombre TEXT NOT NULL,
@@ -63,7 +63,7 @@ db.serialize(function () {
 });
 
 db.serialize(function () {
-    db.run(`CREATE TABLE  IF NOT EXISTS subreddit (
+    db.run(`CREATE TABLE  IF NOT EXISTS subreddits (
         id INTEGER PRIMARY KEY,
         nombre TEXT NOT NULL,
         verificacion INTEGER,
@@ -85,7 +85,7 @@ db.serialize(function () {
 //         usuario_id INTEGER,
 //         fecha_programada DATETIME,
 //         fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-//         FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
+//         FOREIGN KEY(usuario_id) REFERENCES clientes(id)
 //     );`);
 // });
 

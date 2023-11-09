@@ -21,21 +21,21 @@ import {
 
 import { BsPerson, BsReddit, BsImage } from 'react-icons/bs'
 
-import { TypeUsuarios } from '~/models/usuario'
+import { TypeCliente } from '~/models/cliente'
 
 interface TypeComponentClienteFormulario {
     modoEdicion: boolean;
-    usuarioEditar?: TypeUsuarios; // Datos del usuario en caso de edición
+    clienteEditar?: TypeCliente; // Datos del usuario en caso de edición
 }
 
-export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario> = ({ modoEdicion, usuarioEditar }) => {
+export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario> = ({ modoEdicion, clienteEditar }) => {
     const handleInputChange = (e: any) => {
         console.log(e)
     };
     return (<>
 
-        <VisuallyHiddenInput type="number" name='id' id='nombre' defaultValue={usuarioEditar?.id || ''} onChange={handleInputChange} />
-        <VisuallyHiddenInput type="number" name='status' id='nombre' defaultValue={usuarioEditar?.status ? 1 : 0} onChange={handleInputChange} />
+        <VisuallyHiddenInput type="number" name='id' id='nombre' defaultValue={clienteEditar?.id || ''} onChange={handleInputChange} />
+        <VisuallyHiddenInput type="number" name='status' id='nombre' defaultValue={clienteEditar?.status ? 1 : 0} onChange={handleInputChange} />
 
         <Stack direction={['column', 'row']} spacing='50px'>
             <Box width={'100%'} borderWidth='1px' borderRadius='lg' overflow='hidden'>
@@ -48,7 +48,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsPerson />
                                 </InputLeftElement>
-                                <Input type="text" name='nombre' id='nombre' defaultValue={usuarioEditar?.nombre || ''} onChange={handleInputChange} />
+                                <Input type="text" name='nombre' id='nombre' defaultValue={clienteEditar?.nombre || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
 
@@ -58,7 +58,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <MdOutlineEmail />
                                 </InputLeftElement>
-                                <Input type="text" name='email' defaultValue={usuarioEditar?.email || ''} onChange={handleInputChange} />
+                                <Input type="text" name='email' defaultValue={clienteEditar?.email || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
                     </VStack>
@@ -76,7 +76,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsReddit />
                                 </InputLeftElement>
-                                <Input type="text" name='reddit_username' defaultValue={usuarioEditar?.reddit_username || ''} onChange={handleInputChange} />
+                                <Input type="text" name='reddit_username' defaultValue={clienteEditar?.reddit_username || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
 
@@ -86,7 +86,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsReddit />
                                 </InputLeftElement>
-                                <Input type="text" name='reddit_password' defaultValue={usuarioEditar?.reddit_password || ''} onChange={handleInputChange} />
+                                <Input type="text" name='reddit_password' defaultValue={clienteEditar?.reddit_password || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
                         <FormControl id="reddit_clientId">
@@ -95,7 +95,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsReddit />
                                 </InputLeftElement>
-                                <Input type="text" name='reddit_clientId' defaultValue={usuarioEditar?.reddit_clientId || ''} />
+                                <Input type="text" name='reddit_clientId' defaultValue={clienteEditar?.reddit_clientId || ''} />
                             </InputGroup>
                         </FormControl>
                         <FormControl id="reddit_clientSecret">
@@ -104,7 +104,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsReddit />
                                 </InputLeftElement>
-                                <Input type="text" name="reddit_clientSecret" defaultValue={usuarioEditar?.reddit_clientSecret || ''} />
+                                <Input type="text" name="reddit_clientSecret" defaultValue={clienteEditar?.reddit_clientSecret || ''} />
                             </InputGroup>
                         </FormControl>
                     </VStack>
@@ -120,7 +120,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsImage />
                                 </InputLeftElement>
-                                <Input type="text" name='imgur_username' id='imgur_username' defaultValue={usuarioEditar?.imgur_username || ''} />
+                                <Input type="text" name='imgur_username' id='imgur_username' defaultValue={clienteEditar?.imgur_username || ''} />
                             </InputGroup>
                         </FormControl>
 
@@ -130,7 +130,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsImage />
                                 </InputLeftElement>
-                                <Input type="text" name='imgur_password' defaultValue={usuarioEditar?.imgur_password || ''} onChange={handleInputChange} />
+                                <Input type="text" name='imgur_password' defaultValue={clienteEditar?.imgur_password || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
                         <FormControl id="imgur_clientId">
@@ -139,7 +139,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsImage />
                                 </InputLeftElement>
-                                <Input type="text" name='imgur_clientId' defaultValue={usuarioEditar?.imgur_clientId || ''} onChange={handleInputChange} />
+                                <Input type="text" name='imgur_clientId' defaultValue={clienteEditar?.imgur_clientId || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
                         <FormControl id="imgur_clientSecret">
@@ -148,7 +148,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsImage />
                                 </InputLeftElement>
-                                <Input type="text" name='imgur_clientSecret' defaultValue={usuarioEditar?.imgur_clientSecret || ''} onChange={handleInputChange} />
+                                <Input type="text" name='imgur_clientSecret' defaultValue={clienteEditar?.imgur_clientSecret || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
                     </VStack>

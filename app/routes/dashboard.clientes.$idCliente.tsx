@@ -1,42 +1,56 @@
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useParams } from "@remix-run/react";
 import { LoaderFunctionArgs, json, ActionFunctionArgs, redirect } from "@remix-run/node";
 import { ComponentClienteFormulario } from "~/components/clientes/formulario";
-import { findOne, TypeUsuarios, update } from "~/models/usuario";
+import { findOne, TypeCliente, update, remove } from "~/models/cliente";
 
 
 export async function loader({ params }: LoaderFunctionArgs) {
     const id = params.idCliente as string;
-    const usuario = await findOne(id);
-    if (!usuario) throw new Response("Usuario no encontrado", { status: 404 });
-    return json(usuario);
+    const cliente = await findOne(id);
+    if (!cliente) throw new Response("cliente no encontrado", { status: 404 });
+    return json(cliente);
 }
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-    const form = await request.formData();
-    const idValue = form.get('id');
-    const usuario: TypeUsuarios = {
-        id: parseInt(idValue as string),
-        nombre: form.get('nombre') as string,
-        email: form.get('email') as string,
-        reddit_username: form.get('reddit_username') as string,
-        reddit_password: form.get('reddit_password') as string,
-        reddit_clientId: form.get('reddit_clientId') as string,
-        reddit_clientSecret: form.get('reddit_clientSecret') as string,
-        imgur_username: form.get('imgur_username') as string,
-        imgur_password: form.get('imgur_password') as string,
-        imgur_clientId: form.get('imgur_clientId') as string,
-        imgur_clientSecret: form.get('imgur_clientSecret') as string
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+
+    switch (request.method) {
+        case 'POST': // editar
+            const form = await request.formData();
+            const idValue = form.get('id');
+
+            const cliente: TypeCliente = {
+                id: parseInt(idValue as string),
+                nombre: form.get('nombre') as string,
+                email: form.get('email') as string,
+                reddit_username: form.get('reddit_username') as string,
+                reddit_password: form.get('reddit_password') as string,
+                reddit_clientId: form.get('reddit_clientId') as string,
+                reddit_clientSecret: form.get('reddit_clientSecret') as string,
+                imgur_username: form.get('imgur_username') as string,
+                imgur_password: form.get('imgur_password') as string,
+                imgur_clientId: form.get('imgur_clientId') as string,
+                imgur_clientSecret: form.get('imgur_clientSecret') as string
+            }
+            await update(cliente.id, cliente);
+            return redirect(`/dashboard/clientes`);
+            break;
+        case 'DELETE': // editar
+            const cliente_id = params.idCliente || '';
+            await remove(cliente_id);
+            return json({ message: 'Cliente eliminado' });
+            break;
+
+        default:
+            break;
     }
-    console.log(usuario);
-    await update(usuario.id, usuario);
-    return redirect(`/dashboard/clientes`);
+
 };
 
 
 
 export default function DashboardClienteEdit() {
-    const user = useLoaderData<typeof loader>();
-    return (<Form method="POST" action={`/dashboard/clientes/${user.id}`} >
-        <ComponentClienteFormulario modoEdicion={true} usuarioEditar={user} />
+    const client = useLoaderData<typeof loader>();
+    return (<Form method="POST" action={`/dashboard/clientes/${client.id}`} >
+        <ComponentClienteFormulario modoEdicion={true} clienteEditar={client} />
     </Form>);
 }

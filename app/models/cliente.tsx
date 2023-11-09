@@ -1,8 +1,9 @@
 // const db = require('../database/conection');
 import db from "~/database/conection";
 
-export type TypeUsuarios = {
+export type TypeCliente = {
     id: number;
+    usuario_id: number;
     nombre: string;
     status: boolean;
     email: string;
@@ -18,7 +19,7 @@ export type TypeUsuarios = {
     updated_at: string;
 };
 
-export type NewTypeUsuarios = {
+export type NewTypeCliente = {
     nombre: string;
     email: string;
     reddit_username: string;
@@ -33,7 +34,7 @@ export type NewTypeUsuarios = {
 
 export const all = () => {
     return new Promise((suc, rej) => {
-        db.all("SELECT * from usuarios", function (err, rows) {
+        db.all("SELECT * from clientes", function (err, rows) {
             if (err) {
                 rej(err.message);
             } else {
@@ -42,7 +43,7 @@ export const all = () => {
         });
     });
 };
-export const create = (usuario: NewTypeUsuarios) => {
+export const create = (cliente: NewTypeCliente) => {
     const {
         nombre,
         email,
@@ -54,13 +55,13 @@ export const create = (usuario: NewTypeUsuarios) => {
         imgur_password,
         imgur_clientId,
         imgur_clientSecret,
-    } = usuario;
+    } = cliente;
 
     return new Promise((suc, rej) => {
         db.serialize(function () {
             try {
                 const stmt = db.prepare(
-                    "INSERT INTO usuarios (nombre, email, reddit_username, reddit_password, reddit_clientId, reddit_clientSecret, imgur_username, imgur_password, imgur_clientId, imgur_clientSecret, status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    "INSERT INTO clientes (nombre, email, reddit_username, reddit_password, reddit_clientId, reddit_clientSecret, imgur_username, imgur_password, imgur_clientId, imgur_clientSecret, status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 );
                 stmt.run(
                     nombre,
@@ -76,7 +77,7 @@ export const create = (usuario: NewTypeUsuarios) => {
                     1
                 );
                 stmt.finalize();
-                suc(usuario);
+                suc(cliente);
             } catch (error) {
                 rej(error);
             }
@@ -89,7 +90,7 @@ export const actives = (data: any) => {
         db.serialize(function () {
             try {
                 const stmt = db.prepare(
-                    "INSERT INTO usuarios (nombre,reddit_name,reddit_password,status) VALUES (?,?,?,1)"
+                    "INSERT INTO Clientes (nombre,reddit_name,reddit_password,status) VALUES (?,?,?,1)"
                 );
                 stmt.run(nombre, reddit_name, reddit_password);
                 stmt.finalize();
@@ -100,21 +101,22 @@ export const actives = (data: any) => {
         });
     });
 };
-export const findOne = (id: number | string): Promise<TypeUsuarios | null> => {
+export const findOne = (id: number | string): Promise<TypeCliente | null> => {
     return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM usuarios WHERE id = ${id}`;
+        const query = `SELECT * FROM clientes WHERE id = ${id}`;
         db.get(query, (err, row) => {
             if (err) {
                 reject(err.message);
             } else {
+
                 // Si no hay resultados, devolver null
-                const usuario: TypeUsuarios | null = row ? row : null;
-                resolve(usuario);
+                const cliente: TypeCliente | null = row ? row : null;
+                resolve(cliente);
             }
         });
     });
 };
-export const update = (id: number, usuario: TypeUsuarios) => {
+export const update = (id: number, cliente: TypeCliente) => {
     const {
         nombre,
         email,
@@ -127,13 +129,13 @@ export const update = (id: number, usuario: TypeUsuarios) => {
         imgur_clientId,
         imgur_clientSecret,
         status,
-    } = usuario;
+    } = cliente;
 
     return new Promise((resolve, reject) => {
         db.serialize(function () {
             try {
                 const stmt = db.prepare(
-                    `UPDATE usuarios SET
+                    `UPDATE clientes SET
               nombre = ?,
               email = ?,
               reddit_username = ?,
@@ -164,14 +166,33 @@ export const update = (id: number, usuario: TypeUsuarios) => {
                 );
 
                 stmt.finalize();
-                resolve(usuario);
+                resolve(cliente);
             } catch (error) {
                 reject(error);
             }
         });
     });
 };
-// export const create = (usuario:TypeUsuarios) => {
+
+
+export const remove = (id: string | number) => {
+    return new Promise((suc, rej) => {
+        db.serialize(function () {
+            try {
+                const stmt = db.prepare(`DELETE from clientes where id = ?`);
+                stmt.run(id);
+                stmt.finalize();
+                suc(true);
+            } catch (error) {
+                rej(error)
+            }
+        });
+    })
+}
+
+
+
+// export const create = (cliente:TypeCliente) => {
 
 // }
 
@@ -179,13 +200,13 @@ export const update = (id: number, usuario: TypeUsuarios) => {
 //  ,
 //     actives(),
 //         create(data),
-//         update(data, usuario_id) {
+//         update(data, cliente_id) {
 //         const { nombre, reddit_name, reddit_password } = data;
 //         return new Promise((suc, rej) => {
 //             db.serialize(function () {
 //                 try {
-//                     const stmt = db.prepare(`UPDATE usuarios set nombre= ?, reddit_name= ?, reddit_password=? where id = ?`);
-//                     stmt.run(nombre, reddit_name, reddit_password, usuario_id);
+//                     const stmt = db.prepare(`UPDATE Clientes set nombre= ?, reddit_name= ?, reddit_password=? where id = ?`);
+//                     stmt.run(nombre, reddit_name, reddit_password, cliente_id);
 //                     stmt.finalize();
 //                     suc(data);
 //                 } catch (error) {
@@ -196,7 +217,7 @@ export const update = (id: number, usuario: TypeUsuarios) => {
 //     },
 //     find(id) {
 //         return new Promise((suc, rej) => {
-//             db.all(`SELECT * from usuarios where id = ${id}`, function (err, rows) {
+//             db.all(`SELECT * from Clientes where id = ${id}`, function (err, rows) {
 //                 if (err) {
 //                     rej(err.message)
 //                 } else {
@@ -209,7 +230,7 @@ export const update = (id: number, usuario: TypeUsuarios) => {
 //         return new Promise((suc, rej) => {
 //             db.serialize(function () {
 //                 try {
-//                     const stmt = db.prepare(`DELETE from usuarios where id = ?`);
+//                     const stmt = db.prepare(`DELETE from Clientes where id = ?`);
 //                     stmt.run(id);
 //                     stmt.finalize();
 //                     suc(true);
@@ -223,7 +244,7 @@ export const update = (id: number, usuario: TypeUsuarios) => {
 //         return new Promise((suc, rej) => {
 //             db.serialize(function () {
 //                 try {
-//                     const stmt = db.prepare(`UPDATE usuarios set status=? where id = ?`);
+//                     const stmt = db.prepare(`UPDATE Clientes set status=? where id = ?`);
 //                     stmt.run(!status, id);
 //                     stmt.finalize();
 //                     suc(id);
