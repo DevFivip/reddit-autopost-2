@@ -1,5 +1,5 @@
 import { Outlet } from "@remix-run/react";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, Link } from "@remix-run/react";
 import {
   Table,
   Thead,
@@ -39,13 +39,15 @@ export default function DashboardClienteLayout() {
               </Tr>
             </Thead>
             <Tbody>
-              {usuarios.map((u,i) => <Tr key={i}>
+              {usuarios.map((u, i) => <Tr key={i}>
                 <Td>{u.nombre}</Td>
                 <Td>millimetres (mm)</Td>
                 <Td isNumeric>25.4</Td>
                 <Td isNumeric >
                   <ButtonGroup gap='4'>
-                    <Button>Editar</Button>
+                    <Link to={`${u.id}`}>
+                      <Button>Editar</Button>
+                    </Link>
                     <Button>Eliminar</Button>
                   </ButtonGroup>
                 </Td>
@@ -56,8 +58,6 @@ export default function DashboardClienteLayout() {
         </TableContainer>
       </Box>
     </Flex>
-
-
 
     <Outlet />
 

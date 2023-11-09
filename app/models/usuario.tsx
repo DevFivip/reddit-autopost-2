@@ -2,80 +2,120 @@
 import db from "~/database/conection";
 
 export type TypeUsuarios = {
-    id: number
-    nombre: string
-    status: boolean
-    email: string
-    reddit_username: string
-    reddit_password: string
-    reddit_clientId: string
-    reddit_clientSecret: string
-    imgur_username: string
-    imgur_password: string
-    imgur_clientId: string
-    imgur_clientSecret: string
-}
+    id: number;
+    nombre: string;
+    status: boolean;
+    email: string;
+    reddit_username: string;
+    reddit_password: string;
+    reddit_clientId: string;
+    reddit_clientSecret: string;
+    imgur_username: string;
+    imgur_password: string;
+    imgur_clientId: string;
+    imgur_clientSecret: string;
+};
 
 export type NewTypeUsuarios = {
-    nombre: string
-    email: string
-    reddit_username: string
-    reddit_password: string
-    reddit_clientId: string
-    reddit_clientSecret: string
-    imgur_username: string
-    imgur_password: string
-    imgur_clientId: string
-    imgur_clientSecret: string
-}
-
+    nombre: string;
+    email: string;
+    reddit_username: string;
+    reddit_password: string;
+    reddit_clientId: string;
+    reddit_clientSecret: string;
+    imgur_username: string;
+    imgur_password: string;
+    imgur_clientId: string;
+    imgur_clientSecret: string;
+};
 
 export const all = () => {
     return new Promise((suc, rej) => {
-        db.all('SELECT * from usuarios', function (err, rows) {
+        db.all("SELECT * from usuarios", function (err, rows) {
             if (err) {
-                rej(err.message)
+                rej(err.message);
             } else {
-                suc(rows)
+                suc(rows);
             }
         });
-    })
-}
+    });
+};
 
 export const create = (usuario: NewTypeUsuarios) => {
-    const { nombre, email, reddit_username, reddit_password, reddit_clientId, reddit_clientSecret, imgur_username, imgur_password, imgur_clientId, imgur_clientSecret } = usuario;
+    const {
+        nombre,
+        email,
+        reddit_username,
+        reddit_password,
+        reddit_clientId,
+        reddit_clientSecret,
+        imgur_username,
+        imgur_password,
+        imgur_clientId,
+        imgur_clientSecret,
+    } = usuario;
 
     return new Promise((suc, rej) => {
         db.serialize(function () {
             try {
-                const stmt = db.prepare("INSERT INTO usuarios (nombre, email, reddit_username, reddit_password, reddit_clientId, reddit_clientSecret, imgur_username, imgur_password, imgur_clientId, imgur_clientSecret, status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                stmt.run(nombre, email, reddit_username, reddit_password, reddit_clientId, reddit_clientSecret, imgur_username, imgur_password, imgur_clientId, imgur_clientSecret,1);
+                const stmt = db.prepare(
+                    "INSERT INTO usuarios (nombre, email, reddit_username, reddit_password, reddit_clientId, reddit_clientSecret, imgur_username, imgur_password, imgur_clientId, imgur_clientSecret, status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+                stmt.run(
+                    nombre,
+                    email,
+                    reddit_username,
+                    reddit_password,
+                    reddit_clientId,
+                    reddit_clientSecret,
+                    imgur_username,
+                    imgur_password,
+                    imgur_clientId,
+                    imgur_clientSecret,
+                    1
+                );
                 stmt.finalize();
                 suc(usuario);
             } catch (error) {
-                rej(error)
+                rej(error);
             }
         });
-    })
-}
+    });
+};
 export const actives = (data: any) => {
     const { nombre, reddit_name, reddit_password } = data;
     return new Promise((suc, rej) => {
         db.serialize(function () {
             try {
-                const stmt = db.prepare("INSERT INTO usuarios (nombre,reddit_name,reddit_password,status) VALUES (?,?,?,1)");
+                const stmt = db.prepare(
+                    "INSERT INTO usuarios (nombre,reddit_name,reddit_password,status) VALUES (?,?,?,1)"
+                );
                 stmt.run(nombre, reddit_name, reddit_password);
                 stmt.finalize();
                 suc(data);
             } catch (error) {
-                rej(error)
+                rej(error);
             }
         });
-    })
-}
+    });
+};
+export const findOne = (id: number | string): Promise<TypeUsuarios | null> => {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM usuarios WHERE id = ${id}`;
+    db.get(query, (err, row) => {
+      if (err) {
+        reject(err.message);
+      } else {
+        // Si no hay resultados, devolver null
+        const usuario: TypeUsuarios | null = row ? row : null;
+        resolve(usuario);
+      }
+    });
+  });
+};
 
-// export const create = (usuario:TypeUsuarios) => { 
-    
+// export const create = (usuario:TypeUsuarios) => {
+
 // }
 
 // exports default =  {

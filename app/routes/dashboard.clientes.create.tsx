@@ -5,7 +5,7 @@ import { redirect } from "@remix-run/node"; // or cloudflare/deno
 
 import { ActionFunctionArgs } from '@remix-run/node';
 import { NewTypeUsuarios, create } from '~/models/usuario';
-import ComponentClienteFormulario from '~/components/clientes/formulario'
+import { ComponentClienteFormulario } from '~/components/clientes/formulario'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const form = await request.formData();
@@ -33,7 +33,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function DashboardClienteCreate() {
     return (<>
         <Form method="POST" >
-            <ComponentClienteFormulario />
+            <ComponentClienteFormulario modoEdicion={false} />
         </Form>
     </>);
 }
