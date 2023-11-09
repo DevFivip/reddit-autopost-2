@@ -11,9 +11,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const form = await request.formData();
     const usuario: NewTypeUsuarios = {
         nombre: form.get('nombre') as string,
-        email: form.get('emain') as string,
+        email: form.get('email') as string,
         reddit_username: form.get('reddit_username') as string,
-        reddit_password: form.get('eddit_password') as string,
+        reddit_password: form.get('reddit_password') as string,
         reddit_clientId: form.get('reddit_clientId') as string,
         reddit_clientSecret: form.get('reddit_clientSecret') as string,
         imgur_username: form.get('imgur_username') as string,
@@ -21,6 +21,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         imgur_clientId: form.get('imgur_clientId') as string,
         imgur_clientSecret: form.get('imgur_clientSecret') as string
     }
+    console.log({usuario})
     await create(usuario);
     return redirect(`/dashboard/clientes`);
 };

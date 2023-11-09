@@ -11,7 +11,8 @@ import {
     Heading,
     Spacer,
     Stack,
-    ButtonGroup
+    ButtonGroup,
+    VisuallyHiddenInput
 } from '@chakra-ui/react'
 
 import {
@@ -28,10 +29,14 @@ interface TypeComponentClienteFormulario {
 }
 
 export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario> = ({ modoEdicion, usuarioEditar }) => {
-    const handleInputChange = (e:any) => {
+    const handleInputChange = (e: any) => {
         console.log(e)
     };
     return (<>
+
+        <VisuallyHiddenInput type="number" name='id' id='nombre' defaultValue={usuarioEditar?.id || ''} onChange={handleInputChange} />
+        <VisuallyHiddenInput type="number" name='status' id='nombre' defaultValue={usuarioEditar?.status ? 1 : 0} onChange={handleInputChange} />
+
         <Stack direction={['column', 'row']} spacing='50px'>
             <Box width={'100%'} borderWidth='1px' borderRadius='lg' overflow='hidden'>
                 <Box m={8}>
@@ -99,7 +104,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsReddit />
                                 </InputLeftElement>
-                                <Input type="text" name="reddit_clientSecret" value={usuarioEditar?.reddit_clientSecret || ''} />
+                                <Input type="text" name="reddit_clientSecret" defaultValue={usuarioEditar?.reddit_clientSecret || ''} />
                             </InputGroup>
                         </FormControl>
                     </VStack>
@@ -115,7 +120,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <BsImage />
                                 </InputLeftElement>
-                                <Input type="text" id='imgur_username' defaultValue={usuarioEditar?.imgur_username || ''} />
+                                <Input type="text" name='imgur_username' id='imgur_username' defaultValue={usuarioEditar?.imgur_username || ''} />
                             </InputGroup>
                         </FormControl>
 

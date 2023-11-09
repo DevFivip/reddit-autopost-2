@@ -40,7 +40,6 @@ export const all = () => {
         });
     });
 };
-
 export const create = (usuario: NewTypeUsuarios) => {
     const {
         nombre,
@@ -100,20 +99,76 @@ export const actives = (data: any) => {
     });
 };
 export const findOne = (id: number | string): Promise<TypeUsuarios | null> => {
-  return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM usuarios WHERE id = ${id}`;
-    db.get(query, (err, row) => {
-      if (err) {
-        reject(err.message);
-      } else {
-        // Si no hay resultados, devolver null
-        const usuario: TypeUsuarios | null = row ? row : null;
-        resolve(usuario);
-      }
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM usuarios WHERE id = ${id}`;
+        db.get(query, (err, row) => {
+            if (err) {
+                reject(err.message);
+            } else {
+                // Si no hay resultados, devolver null
+                const usuario: TypeUsuarios | null = row ? row : null;
+                resolve(usuario);
+            }
+        });
     });
-  });
 };
+export const update = (id: number, usuario: TypeUsuarios) => {
+    const {
+        nombre,
+        email,
+        reddit_username,
+        reddit_password,
+        reddit_clientId,
+        reddit_clientSecret,
+        imgur_username,
+        imgur_password,
+        imgur_clientId,
+        imgur_clientSecret,
+        status,
+    } = usuario;
 
+    return new Promise((resolve, reject) => {
+        db.serialize(function () {
+            try {
+                const stmt = db.prepare(
+                    `UPDATE usuarios SET
+              nombre = ?,
+              email = ?,
+              reddit_username = ?,
+              reddit_password = ?,
+              reddit_clientId = ?,
+              reddit_clientSecret = ?,
+              imgur_username = ?,
+              imgur_password = ?,
+              imgur_clientId = ?,
+              imgur_clientSecret = ?,
+              status = ?
+            WHERE id = ?`
+                );
+
+                stmt.run(
+                    nombre,
+                    email,
+                    reddit_username,
+                    reddit_password,
+                    reddit_clientId,
+                    reddit_clientSecret,
+                    imgur_username,
+                    imgur_password,
+                    imgur_clientId,
+                    imgur_clientSecret,
+                    status,
+                    id
+                );
+
+                stmt.finalize();
+                resolve(usuario);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    });
+};
 // export const create = (usuario:TypeUsuarios) => {
 
 // }

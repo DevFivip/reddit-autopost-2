@@ -24,8 +24,19 @@ db.serialize(function () {
         imgur_password TEXT,
         imgur_clientId TEXT,
         imgur_clientSecret TEXT,
-        status INT
+        status INT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+});
+
+db.serialize(function () {
+    db.run(`CREATE TRIGGER actualizar_fecha_modificacion
+    AFTER UPDATE ON usuarios
+    FOR EACH ROW
+    BEGIN
+      UPDATE usuarios SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+    END`);
 });
 
 db.serialize(function () {
