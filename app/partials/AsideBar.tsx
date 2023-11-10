@@ -31,7 +31,7 @@ import {
   FiChevronDown,
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
-import { Link } from '@remix-run/react'
+import { Link,Form } from '@remix-run/react'
 
 interface LinkItemProps {
   name: string
@@ -178,14 +178,16 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                 </Box>
               </HStack>
             </MenuButton>
-            <MenuList
-              bg={useColorModeValue('white', 'gray.900')}
-              borderColor={useColorModeValue('gray.200', 'gray.700')}>
+            <MenuList>
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <form method="post" action='/dashboard'>
+                <MenuItem as={'button'} type={'submit'}>Salir</MenuItem>
+              </form>
+
+
             </MenuList>
           </Menu>
         </Flex>
