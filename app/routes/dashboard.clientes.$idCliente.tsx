@@ -17,7 +17,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         case 'POST': // editar
             const form = await request.formData();
             const idValue = form.get('id');
-
             const cliente: TypeCliente = {
                 id: parseInt(idValue as string),
                 nombre: form.get('nombre') as string,

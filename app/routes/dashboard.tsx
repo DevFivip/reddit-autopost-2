@@ -5,22 +5,21 @@ import authenticator from "~/services/auth.server";
 import { User } from "~/services/session.server";
 
 
-export let loader: LoaderFunctionArgs = async ({ request }): Promise<User | null> => {
-  return await authenticator.isAuthenticated(request, {
+export const loader = async ({ request }: LoaderFunctionArgs): Promise<User | null> => {
+  const res : User =  await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
+  return res;
 };
 
-export const action = async ({ request }): Promise<void> => {
+export const action = async ({ request }:ActionFunctionArgs): Promise<void> => {
   await authenticator.logout(request, { redirectTo: "/login" });
 };
 
 
 export default function DashboardLayout() {
-  const data = useLoaderData();
-  return (<Layout><Outlet />
-
-
+  const data: User = useLoaderData();
+  return (<Layout usuario={data}><Outlet />
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
       <h1>Welcome to Remix Protected Dashboard</h1>
       <p>{data?.name} {data?.token}</p>

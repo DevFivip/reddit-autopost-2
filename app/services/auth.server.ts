@@ -1,11 +1,13 @@
 // app/services/auth.server.ts
 import { Authenticator, AuthorizationError } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
-import { sessionStorage, User } from '~/services/session.server';
+import { sessionStorage } from '~/services/session.server';
+
+import { AutorizeUser } from "~/models/usuarios";
 
 // Create an instance of the authenticator, pass a Type, User,  with what
 // strategies will return and will store in the session
-const authenticator = new Authenticator<User | Error | null>(sessionStorage, {
+const authenticator = new Authenticator<AutorizeUser | Error | null>(sessionStorage, {
   sessionKey: "sessionKey", // keep in sync
   sessionErrorKey: "sessionErrorKey", // keep in sync
 });
@@ -19,7 +21,12 @@ authenticator.use(
     let password = form.get('password') as string;
 
     // initiialize the user here
-    let user = null;
+    // let user: AutorizeUser = {
+    //   id:0,
+    //   name:'',
+    //   email: '',
+    //   token:'',
+    // };
 
     // do some validation, errors are in the sessionErrorKey
     if (!email || email?.length === 0) throw new AuthorizationError('Bad Credentials: Email is required')
@@ -32,8 +39,10 @@ authenticator.use(
 
     // login the user, this could be whatever process you want
     if (email === 'aaron@mail.com' && password === 'password') {
-      user = {
-        name: email,
+      const user: AutorizeUser = {
+        id: 0,
+        name:'Carlos Andrez Perez',
+        email: email,
         token: `${password}-${new Date().getTime()}`,
       };
 

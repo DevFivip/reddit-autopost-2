@@ -1,11 +1,18 @@
 // const db = require('../database/conection');
 import db from "~/database/conection";
 
-export type AuthUser = {
+export type CredentialUser = {
     email: string
     password: string
 }
 
+// define the user model
+export type AutorizeUser = {
+    id: TypeUser["id"]
+    name: string;
+    email: string;
+    token: string;
+  };
 
 export type TypeUser = {
     id: string | number
@@ -16,7 +23,7 @@ export type TypeUser = {
     updated_at: string
 }
 
-export const verifyLogin = (credentials: AuthUser): Promise<TypeUser | null> => {
+export const verifyLogin = (credentials: CredentialUser): Promise<TypeUser | string> => {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM clientes WHERE email = ? AND password = ?';
         // Utiliza parámetros seguros para evitar la inyección de SQL

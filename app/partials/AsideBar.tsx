@@ -1,37 +1,8 @@
-import {
-  IconButton,
-  Avatar,
-  Box,
-  CloseButton,
-  Flex,
-  HStack,
-  VStack,
-  Icon,
-  useColorModeValue,
-  Text,
-  Drawer,
-  DrawerContent,
-  useDisclosure,
-  BoxProps,
-  FlexProps,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
-} from '@chakra-ui/react'
-import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-  FiMenu,
-  FiBell,
-  FiChevronDown,
-} from 'react-icons/fi'
+import { IconButton, Avatar, Box, CloseButton, Flex, HStack, VStack, Icon, useColorModeValue, Text, Drawer, DrawerContent, useDisclosure, BoxProps, FlexProps, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/react'
+import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu, FiBell, FiChevronDown } from 'react-icons/fi'
 import { IconType } from 'react-icons'
-import { Link,Form } from '@remix-run/react'
+import { Link, Form } from '@remix-run/react'
+import { User } from '~/services/session.server'
 
 interface LinkItemProps {
   name: string
@@ -46,6 +17,7 @@ interface NavItemProps extends FlexProps {
 
 interface MobileProps extends FlexProps {
   onOpen: () => void
+  usuario: User
 }
 
 interface SidebarProps extends BoxProps {
@@ -123,7 +95,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   )
 }
 
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const MobileNav = ({ usuario, onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -168,7 +140,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2">
-                  <Text fontSize="sm">Justina Clark</Text>
+                  <Text fontSize="sm">{usuario?.name}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Admin
                   </Text>
@@ -186,8 +158,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               <form method="post" action='/dashboard'>
                 <MenuItem as={'button'} type={'submit'}>Salir</MenuItem>
               </form>
-
-
             </MenuList>
           </Menu>
         </Flex>
@@ -196,7 +166,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   )
 }
 
-const AsideBar = ({ children }: any) => {
+const AsideBar = ({ children, usuario }: any) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -215,7 +185,7 @@ const AsideBar = ({ children }: any) => {
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
+      <MobileNav onOpen={onOpen} usuario={usuario} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
