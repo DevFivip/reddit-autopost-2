@@ -4,12 +4,19 @@ import { Database } from 'sqlite3';
 // Crea una nueva instancia de la base de datos en memoria
 const db = new Database("database.db");
 
+db.serialize(function () {
+    db.run(`CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT,
+        email TEXT,
+        password TEXT,
+        status INT,
+        validated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+});
 
-// Fetch a random integer between -99 and +99
-// db.get(
-//     'SELECT RANDOM() % 100 as result',
-//     (_, res) => console.log(res)
-// );
 // Crea una tabla llamada 'clientes'
 db.serialize(function () {
     db.run(`CREATE TABLE IF NOT EXISTS clientes (
@@ -25,8 +32,10 @@ db.serialize(function () {
         imgur_clientId TEXT,
         imgur_clientSecret TEXT,
         status INT,
+        usuario_id INTEGER,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
     )`);
 });
 
@@ -40,6 +49,15 @@ db.serialize(function () {
 });
 
 db.serialize(function () {
+    db.run(`CREATE TRIGGER IF NOT EXISTS actualizar_fecha_modificacion_usuarios
+    AFTER UPDATE ON usuarios
+    FOR EACH ROW
+    BEGIN
+      UPDATE usuarios SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+    END`);
+});
+
+db.serialize(function () {
     db.run(`CREATE TABLE IF NOT EXISTS posts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         titulo TEXT,
@@ -47,10 +65,12 @@ db.serialize(function () {
         imagen_link_imgur TEXT,
         contenido TEXT,
         cliente_id INTEGER,
+        usuario_id INTEGER,
         fecha_creacion DATETIME,
         fecha_publicacion DATETIME,
         status INT,
-        FOREIGN KEY(cliente_id) REFERENCES clientes(id))`);
+        FOREIGN KEY(cliente_id) REFERENCES clientes(id),
+        FOREIGN KEY(usuario_id) REFERENCES usuarios(id))`);
 });
 
 db.serialize(function () {
