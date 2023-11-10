@@ -9,13 +9,14 @@ export type CredentialUser = {
 // define the user model
 export type AutorizeUser = {
     id: TypeUser["id"]
-    name: string;
+    nombre: string;
     email: string;
     token: string;
   };
 
 export type TypeUser = {
     id: string | number
+    nombre: string
     email: string
     password: string
     validated_at: string
@@ -25,7 +26,7 @@ export type TypeUser = {
 
 export const verifyLogin = (credentials: CredentialUser): Promise<TypeUser | string> => {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM clientes WHERE email = ? AND password = ?';
+        const query = 'SELECT * FROM usuarios WHERE email = ? AND password = ?';
         // Utiliza parámetros seguros para evitar la inyección de SQL
         db.get(query, [credentials.email, credentials.password], (err, row : TypeUser) => {
             if (err) {

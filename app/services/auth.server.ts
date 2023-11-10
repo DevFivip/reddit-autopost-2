@@ -3,7 +3,7 @@ import { Authenticator, AuthorizationError } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import { sessionStorage } from '~/services/session.server';
 
-import { AutorizeUser } from "~/models/usuarios";
+import { AutorizeUser, CredentialUser, TypeUser, verifyLogin } from "~/models/usuarios";
 
 // Create an instance of the authenticator, pass a Type, User,  with what
 // strategies will return and will store in the session
@@ -17,7 +17,7 @@ authenticator.use(
   new FormStrategy(async ({ form }) => {
 
     // get the data from the form...
-    let email = form.get('email') as string;
+    let email = (form.get('email') as string).toLowerCase();
     let password = form.get('password') as string;
 
     // initiialize the user here
@@ -37,24 +37,41 @@ authenticator.use(
     if (typeof password !== 'string')
       throw new AuthorizationError('Bad Credentials: Password must be a string')
 
-    // login the user, this could be whatever process you want
-    if (email === 'aaron@mail.com' && password === 'password') {
-      const user: AutorizeUser = {
-        id: 0,
-        name:'Carlos Andrez Perez',
-        email: email,
-        token: `${password}-${new Date().getTime()}`,
-      };
+    const credentials: CredentialUser = {
+      email, password
+    }
 
-      // the type of this user must match the type you pass to the Authenticator
-      // the strategy will automatically inherit the type if you instantiate
-      // directly inside the `use` method
-      return await Promise.resolve({ ...user });
+    const user = await verifyLogin(credentials);
+
+    if (!user) throw new AuthorizationError(user);
+
+    if (typeof user === 'object') {
+
+      console.log(user)
+
+      // login the user, this could be whatever process you want
+      if (email === user?.email && password === user?.password) {
+        const userAuth: AutorizeUser = {
+          id: user?.id,
+          nombre: user?.nombre,
+          email: user?.email,
+          token: `${password}-${new Date().getTime()}`,
+        };
+
+        // the type of this user must match the type you pass to the Authenticator
+        // the strategy will automatically inherit the type if you instantiate
+        // directly inside the `use` method
+        return await Promise.resolve({ ...userAuth });
+      } else {
+        // if problem with user throw error AuthorizationError
+        throw new AuthorizationError("Error de credenciales")
+      }
 
     } else {
-      // if problem with user throw error AuthorizationError
-      throw new AuthorizationError("Bad Credentials")
+      throw new AuthorizationError("Usuario no encontrado")
     }
+
+
 
   }),
 );
