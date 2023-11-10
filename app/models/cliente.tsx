@@ -22,6 +22,7 @@ export type TypeCliente = {
 export type NewTypeCliente = {
     nombre: string;
     email: string;
+    usuario_id: number;
     reddit_username: string;
     reddit_password: string;
     reddit_clientId: string;

@@ -3,9 +3,6 @@ import { useLoaderData, Form } from "@remix-run/react";
 import authenticator from "~/services/auth.server";
 import { sessionStorage } from "~/services/session.server";
 
-
-'use client'
-
 import {
     Flex, Box, FormControl, FormLabel, Input, Checkbox, Stack, Button, Heading, Text, useColorModeValue,
 } from '@chakra-ui/react'
