@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, json, LoaderFunction } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, Form } from "@remix-run/react";
 import authenticator from "~/services/auth.server";
 import { sessionStorage } from "~/services/session.server";
@@ -21,7 +21,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
  * @param param0
  * @returns
  */
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     await authenticator.isAuthenticated(request, {
         successRedirect: "/dashboard"

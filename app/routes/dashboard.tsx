@@ -1,16 +1,17 @@
-import { Outlet, Link, ActionFunction, Form, LoaderFunction, useLoaderData } from "@remix-run/react";
-
+import { Outlet, Form, useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { Layout } from "~/partials/Layout";
 import authenticator from "~/services/auth.server";
+import { User } from "~/services/session.server";
 
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunctionArgs = async ({ request }): Promise<User | null> => {
   return await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }): Promise<void> => {
   await authenticator.logout(request, { redirectTo: "/login" });
 };
 
