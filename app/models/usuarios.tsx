@@ -12,6 +12,7 @@ export type AutorizeUser = {
     nombre: string;
     email: string;
     token: string;
+    role_id: TypeUser["role_id"]
 };
 export const EmptyAutorizeUser = {
     id: 0,
@@ -24,6 +25,7 @@ export type TypeUser = {
     id: string | number
     nombre: string
     email: string
+    role_id: string | number
     password: string
     validated_at: string
     created_at: string
@@ -34,7 +36,7 @@ export const verifyLogin = (credentials: CredentialUser): Promise<TypeUser | str
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM usuarios WHERE email = ? AND password = ?';
         // Utiliza parámetros seguros para evitar la inyección de SQL
-        db.get(query, [credentials.email, credentials.password], (err, row : TypeUser) => {
+        db.get(query, [credentials.email, credentials.password], (err, row: TypeUser) => {
             if (err) {
                 reject(err.message);
             } else {
@@ -49,7 +51,7 @@ export const getUserById = (id: TypeUser["id"]): Promise<TypeUser | null> => {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM clientes WHERE id = ? ';
         // Utiliza parámetros seguros para evitar la inyección de SQL
-        db.get(query, [id], (err, row : TypeUser) => {
+        db.get(query, [id], (err, row: TypeUser) => {
             if (err) {
                 reject(err.message);
             } else {
