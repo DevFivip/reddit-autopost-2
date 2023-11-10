@@ -22,18 +22,21 @@ import {
 import { BsPerson, BsReddit, BsImage } from 'react-icons/bs'
 
 import { TypeCliente } from '~/models/cliente'
+import { AutorizeUser } from '~/models/usuarios';
 
 interface TypeComponentClienteFormulario {
     modoEdicion: boolean;
     clienteEditar?: TypeCliente; // Datos del usuario en caso de edición
+    usuario: AutorizeUser;
 }
 
-export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario> = ({ modoEdicion, clienteEditar }) => {
-    const handleInputChange = (e: any) => {
-        console.log(e)
+export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario> = ({ modoEdicion, clienteEditar,usuario }) => {
+    const handleInputChange = (e: any): void => {
+        // console.log(e)
     };
     return (<>
 
+        <VisuallyHiddenInput type="number" id='usuario_id' name='usuario_id' defaultValue={usuario?.id || ''} onChange={handleInputChange} />
         <VisuallyHiddenInput type="number" name='id' id='nombre' defaultValue={clienteEditar?.id || ''} onChange={handleInputChange} />
         <VisuallyHiddenInput type="number" name='status' id='nombre' defaultValue={clienteEditar?.status ? 1 : 0} onChange={handleInputChange} />
 

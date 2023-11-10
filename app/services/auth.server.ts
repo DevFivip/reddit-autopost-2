@@ -1,24 +1,31 @@
 // app/services/auth.server.ts
-import { Authenticator, AuthorizationError } from 'remix-auth';
-import { FormStrategy } from 'remix-auth-form';
-import { sessionStorage } from '~/services/session.server';
+import { Authenticator, AuthorizationError } from "remix-auth";
+import { FormStrategy } from "remix-auth-form";
+import { sessionStorage } from "~/services/session.server";
 
-import { AutorizeUser, CredentialUser, TypeUser, verifyLogin } from "~/models/usuarios";
+import {
+  AutorizeUser,
+  CredentialUser,
+  TypeUser,
+  verifyLogin,
+} from "~/models/usuarios";
 
 // Create an instance of the authenticator, pass a Type, User,  with what
 // strategies will return and will store in the session
-const authenticator = new Authenticator<AutorizeUser | Error | null>(sessionStorage, {
-  sessionKey: "sessionKey", // keep in sync
-  sessionErrorKey: "sessionErrorKey", // keep in sync
-});
+const authenticator = new Authenticator<AutorizeUser | Error | null>(
+  sessionStorage,
+  {
+    sessionKey: "sessionKey", // keep in sync
+    sessionErrorKey: "sessionErrorKey", // keep in sync
+  }
+);
 
 // Tell the Authenticator to use the form strategy
 authenticator.use(
   new FormStrategy(async ({ form }) => {
-
     // get the data from the form...
-    let email = (form.get('email') as string).toLowerCase();
-    let password = form.get('password') as string;
+    let email = (form.get("email") as string).toLowerCase();
+    let password = form.get("password") as string;
 
     // initiialize the user here
     // let user: AutorizeUser = {
@@ -29,25 +36,29 @@ authenticator.use(
     // };
 
     // do some validation, errors are in the sessionErrorKey
-    if (!email || email?.length === 0) throw new AuthorizationError('Bad Credentials: Email is required')
-    if (typeof email !== 'string')
-      throw new AuthorizationError('Bad Credentials: Email must be a string')
+    if (!email || email?.length === 0)
+      throw new AuthorizationError("Bad Credentials: Email is required");
+    if (typeof email !== "string")
+      throw new AuthorizationError("Bad Credentials: Email must be a string");
 
-    if (!password || password?.length === 0) throw new AuthorizationError('Bad Credentials: Password is required')
-    if (typeof password !== 'string')
-      throw new AuthorizationError('Bad Credentials: Password must be a string')
+    if (!password || password?.length === 0)
+      throw new AuthorizationError("Bad Credentials: Password is required");
+    if (typeof password !== "string")
+      throw new AuthorizationError(
+        "Bad Credentials: Password must be a string"
+      );
 
     const credentials: CredentialUser = {
-      email, password
-    }
+      email,
+      password,
+    };
 
     const user = await verifyLogin(credentials);
 
     if (!user) throw new AuthorizationError(user);
 
-    if (typeof user === 'object') {
-
-      console.log(user)
+    if (typeof user === "object") {
+      console.log(user);
 
       // login the user, this could be whatever process you want
       if (email === user?.email && password === user?.password) {
@@ -64,16 +75,12 @@ authenticator.use(
         return await Promise.resolve({ ...userAuth });
       } else {
         // if problem with user throw error AuthorizationError
-        throw new AuthorizationError("Error de credenciales")
+        throw new AuthorizationError("Error de credenciales");
       }
-
     } else {
-      throw new AuthorizationError("Usuario no encontrado")
+      throw new AuthorizationError("Usuario no encontrado");
     }
-
-
-
-  }),
+  })
 );
 
-export default authenticator
+export default authenticator;

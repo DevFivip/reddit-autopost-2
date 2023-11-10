@@ -12,7 +12,13 @@ export type AutorizeUser = {
     nombre: string;
     email: string;
     token: string;
-  };
+};
+export const EmptyAutorizeUser = {
+    id: 0,
+    nombre: "",
+    email: "",
+    token: ""
+};
 
 export type TypeUser = {
     id: string | number

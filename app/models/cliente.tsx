@@ -48,6 +48,7 @@ export const create = (cliente: NewTypeCliente) => {
     const {
         nombre,
         email,
+        usuario_id,
         reddit_username,
         reddit_password,
         reddit_clientId,
@@ -62,11 +63,12 @@ export const create = (cliente: NewTypeCliente) => {
         db.serialize(function () {
             try {
                 const stmt = db.prepare(
-                    "INSERT INTO clientes (nombre, email, reddit_username, reddit_password, reddit_clientId, reddit_clientSecret, imgur_username, imgur_password, imgur_clientId, imgur_clientSecret, status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    "INSERT INTO clientes (nombre, email, usuario_id, reddit_username, reddit_password, reddit_clientId, reddit_clientSecret, imgur_username, imgur_password, imgur_clientId, imgur_clientSecret, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 );
                 stmt.run(
                     nombre,
                     email,
+                    usuario_id,
                     reddit_username,
                     reddit_password,
                     reddit_clientId,
@@ -121,6 +123,7 @@ export const update = (id: number, cliente: TypeCliente) => {
     const {
         nombre,
         email,
+        usuario_id,
         reddit_username,
         reddit_password,
         reddit_clientId,
@@ -139,6 +142,7 @@ export const update = (id: number, cliente: TypeCliente) => {
                     `UPDATE clientes SET
               nombre = ?,
               email = ?,
+              usuario_id = ?,
               reddit_username = ?,
               reddit_password = ?,
               reddit_clientId = ?,
@@ -154,6 +158,7 @@ export const update = (id: number, cliente: TypeCliente) => {
                 stmt.run(
                     nombre,
                     email,
+                    usuario_id,
                     reddit_username,
                     reddit_password,
                     reddit_clientId,

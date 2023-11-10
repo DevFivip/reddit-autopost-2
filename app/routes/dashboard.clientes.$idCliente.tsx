@@ -2,13 +2,17 @@ import { Form, useLoaderData, useParams } from "@remix-run/react";
 import { LoaderFunctionArgs, json, ActionFunctionArgs, redirect } from "@remix-run/node";
 import { ComponentClienteFormulario } from "~/components/clientes/formulario";
 import { findOne, TypeCliente, update, remove } from "~/models/cliente";
+import { AutorizeUser, EmptyAutorizeUser } from "~/models/usuarios";
+import authenticator from "~/services/auth.server";
+import { getAutorizeUser } from "~/middlewares/getAutorizeUser";
 
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ params, request }: LoaderFunctionArgs) {
     const id = params.idCliente as string;
-    const cliente = await findOne(id);
+    const cliente: TypeCliente = await findOne(id);
     if (!cliente) throw new Response("cliente no encontrado", { status: 404 });
-    return json(cliente);
+    const user: AutorizeUser = await getAutorizeUser(request)
+    return { cliente, user };
 }
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -21,6 +25,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
                 id: parseInt(idValue as string),
                 nombre: form.get('nombre') as string,
                 email: form.get('email') as string,
+                usuario_id: parseInt(form.get('usuario_id') as string),
                 reddit_username: form.get('reddit_username') as string,
                 reddit_password: form.get('reddit_password') as string,
                 reddit_clientId: form.get('reddit_clientId') as string,
@@ -48,8 +53,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 
 export default function DashboardClienteEdit() {
-    const client = useLoaderData<typeof loader>();
-    return (<Form method="POST" action={`/dashboard/clientes/${client.id}`} >
-        <ComponentClienteFormulario modoEdicion={true} clienteEditar={client} />
+    const { cliente, user } = useLoaderData<typeof loader>();
+    return (<Form method="POST" action={`/dashboard/clientes/${cliente.id}`} >
+        <ComponentClienteFormulario modoEdicion={true} clienteEditar={cliente} usuario={user} />
     </Form>);
 }
