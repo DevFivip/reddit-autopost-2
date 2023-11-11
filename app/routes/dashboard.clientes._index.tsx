@@ -62,8 +62,8 @@ export default function DashboardClienteLayout() {
           <Table variant='simple'>
             <Thead>
               <Tr>
-                <Th>To convert</Th>
-                <Th>into</Th>
+                <Th>Nombre Y Apellido</Th>
+                <Th>Email</Th>
                 <Th isNumeric>Tags</Th>
                 <Th isNumeric>Actions</Th>
               </Tr>

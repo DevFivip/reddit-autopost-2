@@ -20,7 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     await authenticator.isAuthenticated(request, {
         successRedirect: "/dashboard"
     });
-
+    
     const session = await sessionStorage.getSession(
         request.headers.get("Cookie")
     );

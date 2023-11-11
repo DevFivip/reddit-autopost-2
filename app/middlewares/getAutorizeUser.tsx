@@ -1,6 +1,6 @@
-import { AutorizeUser,  } from "~/models/usuarios";
 import authenticator from "~/services/auth.server";
 import { AuthUser, EmptyAutorizeUser } from 'prisma/types/user';
+import { redirect } from "@remix-run/node";
 
 export const getAutorizeUser = async (request: any): Promise<AuthUser | null> => {
     try {
@@ -8,6 +8,7 @@ export const getAutorizeUser = async (request: any): Promise<AuthUser | null> =>
       return user;
     } catch (error) {
       console.error('Error during authentication:', error);
+      redirect('/login');
       return null;
     }
   };

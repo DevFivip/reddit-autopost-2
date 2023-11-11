@@ -22,13 +22,13 @@
     "express": "^4.18.2",
     "framer-motion": "^6.5.1",
     "isbot": "^3.6.8",
-    "moment": "^2.29.4",
+ 
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "remix-auth": "^3.6.0",
-    "remix-auth-form": "^1.4.0",
-    "sqlite3": "^5.1.6"
+    "remix-auth-form": "^1.4.0"
+  
   },
   "devDependencies": {
     "@remix-run/dev": "^2.2.0",

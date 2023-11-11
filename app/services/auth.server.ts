@@ -69,6 +69,8 @@ authenticator.use(
           token: `${password}-${new Date().getTime()}`,
         };
 
+        console.log({authUser});
+
         // the type of this user must match the type you pass to the Authenticator
         // the strategy will automatically inherit the type if you instantiate
         // directly inside the `use` method
