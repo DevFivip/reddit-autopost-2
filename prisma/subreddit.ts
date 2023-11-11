@@ -5,8 +5,8 @@ import { CreateSubreddit, UpdateSubreddit } from "./types/subreddit";
 
 const db = new PrismaClient();
 
-export const getAll = async (): Promise<Subreddit[]> => {
-    return await db.subreddit.findMany();
+export const getAll = async (query:any=false): Promise<Subreddit[]> => {
+    return await db.subreddit.findMany(query);
 };
 
 export const findById = async (id: number) => {

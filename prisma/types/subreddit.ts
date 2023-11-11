@@ -9,3 +9,8 @@ export interface CreateSubreddit extends Omit<Subreddit, 'createdAt' | 'updatedA
 export interface UpdateSubreddit extends Omit<Subreddit, 'createdAt' | 'updatedAt'  | 'status'> {
     // Aquí puedes agregar propiedades adicionales si lo deseas
 }
+
+
+export interface typeSubredditOnCustomer extends Omit<Subreddit, 'createdAt' | 'updatedAt'> {
+    asignado?: boolean;
+  }
