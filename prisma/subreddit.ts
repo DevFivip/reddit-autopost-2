@@ -1,7 +1,7 @@
 
 import { PrismaClient, Subreddit } from "@prisma/client";
 import { CreateSubreddit, UpdateSubreddit } from "./types/subreddit";
-// import type { Customer, UpdateUser } from "./types/user";
+// import type { subreddit, UpdateUser } from "./types/user";
 
 const db = new PrismaClient();
 
@@ -17,21 +17,21 @@ export const findById = async (id: number) => {
     });
 };
 
-export const create = async (customer: CreateSubreddit): Promise<Subreddit> => {
+export const create = async (subreddit: CreateSubreddit): Promise<Subreddit> => {
     try {
-        return await db.subreddit.create({ data: customer });
+        return await db.subreddit.create({ data: subreddit });
     } catch (error) {
-        console.error("Error creating customer:", error);
+        console.error("Error creating subreddit:", error);
         throw error;
     }
 };
 
-export const update = async (id: number, customer: UpdateSubreddit): Promise<Subreddit> => {
+export const update = async (id: number, subreddit: UpdateSubreddit): Promise<Subreddit> => {
     return await db.subreddit.update({
         where: {
             id,
         },
-        data: customer,
+        data: subreddit,
     });
 };
 

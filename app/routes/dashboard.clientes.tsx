@@ -1,8 +1,6 @@
 import { Heading, Flex, Spacer, Button } from "@chakra-ui/react";
 import { Link, Outlet } from "@remix-run/react";
 
-
-
 export default function DashboardClienteLayout() {
   return (
     <>

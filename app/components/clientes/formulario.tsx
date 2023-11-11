@@ -12,7 +12,10 @@ import {
     Spacer,
     Stack,
     ButtonGroup,
-    VisuallyHiddenInput
+    VisuallyHiddenInput,
+    Select,
+    List,
+    ListItem
 } from '@chakra-ui/react'
 
 import {
@@ -22,13 +25,13 @@ import {
 import { BsPerson, BsReddit, BsImage, BsTelegram } from 'react-icons/bs'
 
 import { AuthUser } from 'prisma/types/user';
-import { Customer } from '@prisma/client';
-
+// import { Customer } from '@prisma/client';
+import { UpdateCustomer } from "prisma/types/customer";
 
 
 interface TypeComponentClienteFormulario {
     modoEdicion: boolean;
-    clienteEditar?: Customer | null; // Datos del usuario en caso de edición
+    clienteEditar?: UpdateCustomer | null; // Datos del usuario en caso de edición
     usuario: AuthUser | null;
 }
 
@@ -40,7 +43,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
 
         <VisuallyHiddenInput type="number" id='user_id' name='user_id' defaultValue={usuario?.id || ''} onChange={handleInputChange} />
         <VisuallyHiddenInput type="number" name='id' id='nombre' defaultValue={clienteEditar?.id || ''} onChange={handleInputChange} />
-        <VisuallyHiddenInput type="number" name='status' id='status' defaultValue={clienteEditar?.status ? 1 : 0} onChange={handleInputChange} />
+        {/* <VisuallyHiddenInput type="number" name='status' id='status' defaultValue={clienteEditar?.status ? 1 : 0} onChange={handleInputChange} /> */}
 
         <Stack direction={['column', 'row']} spacing='50px'>
             <Box width={'100%'} borderWidth='1px' borderRadius='lg' overflow='hidden'>
@@ -57,7 +60,7 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                             </InputGroup>
                         </FormControl>
                         <FormControl id="lastName">
-                        <FormLabel>Apellido</FormLabel>
+                            <FormLabel>Apellido</FormLabel>
                             <InputGroup >
                                 <InputLeftElement pointerEvents="none">
                                     <BsPerson />
@@ -180,7 +183,6 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                     </VStack>
                 </Box>
             </Box>
-
             <Box width={'100%'} borderWidth='1px' borderRadius='lg' overflow='hidden'>
                 <Box m={8}>
                     <VStack spacing={5}>
@@ -197,7 +199,6 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                     </VStack>
                 </Box>
             </Box>
-
         </Stack>
 
         <Flex>
@@ -207,5 +208,6 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                     <Button colorScheme='blue' type='submit'>{modoEdicion ? 'Actualizar' : 'Guardar'}</Button>
                 </ButtonGroup>
             </Box>
-        </Flex></>)
+        </Flex>
+    </>)
 }

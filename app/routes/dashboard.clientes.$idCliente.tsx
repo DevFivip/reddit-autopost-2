@@ -6,7 +6,7 @@ import { getAutorizeUser } from "~/middlewares/getAutorizeUser";
 
 
 import { findById, update, remove } from "prisma/customer";
-import { Customer } from "@prisma/client";
+// import { Customer } from "@prisma/client";
 import { UpdateCustomer } from "prisma/types/customer";
 
 import { AuthUser } from 'prisma/types/user';
@@ -15,7 +15,7 @@ import { AuthUser } from 'prisma/types/user';
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
     const id = params.idCliente as string;
-    const customer: Customer | null = await findById(+id);
+    const customer: UpdateCustomer | null = await findById(+id);
     if (!customer) throw new Response("customer no encontrado", { status: 404 });
 
     const user: AuthUser | null = await getAutorizeUser(request)

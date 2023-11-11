@@ -12,7 +12,8 @@ import {
     Spacer,
     Stack,
     ButtonGroup,
-    VisuallyHiddenInput
+    VisuallyHiddenInput,
+    Checkbox
 } from '@chakra-ui/react'
 
 'react-icons/md'
@@ -20,13 +21,14 @@ import {
 import { BsReddit } from 'react-icons/bs'
 
 import { AuthUser } from 'prisma/types/user';
-import { Subreddit } from '@prisma/client';
+// import { Subreddit } from '@prisma/client';
+import { UpdateSubreddit } from 'prisma/types/subreddit';
 
 
 
 interface TypeComponentSubredditFormulario {
     modoEdicion: boolean;
-    subredditEditar?: Subreddit | null; // Datos del usuario en caso de edición
+    subredditEditar?: UpdateSubreddit | null; // Datos del usuario en caso de edición
     usuario: AuthUser | null;
 }
 
@@ -38,7 +40,7 @@ export const ComponentSubredditFormulario: React.FC<TypeComponentSubredditFormul
 
         <VisuallyHiddenInput type="number" id='user_id' name='user_id' defaultValue={usuario?.id || ''} onChange={handleInputChange} />
         <VisuallyHiddenInput type="number" name='id' id='nombre' defaultValue={subredditEditar?.id || ''} onChange={handleInputChange} />
-        <VisuallyHiddenInput type="number" name='status' id='status' defaultValue={subredditEditar?.status ? 1 : 0} onChange={handleInputChange} />
+        {/* <VisuallyHiddenInput type="number" name='status' id='status' defaultValue={subredditEditar?.status ? 1 : 0} onChange={handleInputChange} /> */}
 
         <Stack direction={['column', 'row']} spacing='50px'>
             <Box width={'md'} borderWidth='1px' borderRadius='lg' overflow='hidden'>
@@ -55,12 +57,19 @@ export const ComponentSubredditFormulario: React.FC<TypeComponentSubredditFormul
                             </InputGroup>
                         </FormControl>
                         <FormControl id="tags">
-                            <FormLabel>Apellido</FormLabel>
+                            <FormLabel>Tags</FormLabel>
                             <InputGroup >
                                 <InputLeftElement pointerEvents="none">
                                     <BsReddit />
                                 </InputLeftElement>
                                 <Input type="text" name='tags' id='tags' defaultValue={subredditEditar?.tags || ''} onChange={handleInputChange} />
+                            </InputGroup>
+                        </FormControl>
+                        <FormControl id="verificacion">
+                            <FormLabel>Validación</FormLabel>
+                            <InputGroup >
+                                <Checkbox defaultChecked={subredditEditar?.verificacion} id='verificacion' name='verificacion' value={'requiere'}>Requiere Verificación</Checkbox>
+                                {/* <Input type="text" name='tags' id='tags' defaultValue={subredditEditar?.tags || ''} onChange={handleInputChange} /> */}
                             </InputGroup>
                         </FormControl>
                     </VStack>
@@ -75,5 +84,8 @@ export const ComponentSubredditFormulario: React.FC<TypeComponentSubredditFormul
                 </ButtonGroup>
             </Box>
         </Flex>
+        <Stack>
+
+        </Stack>
     </>)
 }

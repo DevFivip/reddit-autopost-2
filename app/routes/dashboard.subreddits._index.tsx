@@ -1,12 +1,14 @@
 import { Outlet } from "@remix-run/react";
 import { useLoaderData, Link } from "@remix-run/react";
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableContainer, Flex, Box, ButtonGroup, Button, Badge } from '@chakra-ui/react'
+import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableContainer, Flex, Box, ButtonGroup, Button, Badge, Icon } from '@chakra-ui/react'
 
 import { useRevalidator } from "@remix-run/react";
 
 // import { all, TypeCliente } from "~/models/cliente";
 import { getAll } from "prisma/subreddit";
 import { Subreddit } from "@prisma/client";
+
+import { BsFillPatchCheckFill } from 'react-icons/bs'
 
 export async function loader() {
   const subreddits: Subreddit[] = await getAll()
@@ -17,9 +19,9 @@ export async function loader() {
 export default function DashboardSubredditIndexLayout() {
   const revalidator = useRevalidator();
 
-  const handleDeleteCliente = async (id: string | number) => {
+  const handleDeleteSubreddit = async (id: string | number) => {
     try {
-      const response = await fetch(`/dashboard/clientes/${id}`, {
+      const response = await fetch(`/dashboard/subreddits/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -28,7 +30,7 @@ export default function DashboardSubredditIndexLayout() {
       });
 
       if (!response.ok) {
-        throw new Error(`Error al eliminar el cliente: ${response.statusText}`);
+        throw new Error(`Error al eliminar el : ${response.statusText}`);
       }
       revalidator.revalidate();
       // Aquí podrías actualizar tu estado de frontend o realizar otras acciones necesarias.
@@ -55,7 +57,7 @@ export default function DashboardSubredditIndexLayout() {
             </Thead>
             <Tbody>
               {subreddits.map((u, i) => <Tr key={i}>
-                <Td>{u.nombre}</Td>
+                <Td>{u.nombre} {!u.verificacion || <Icon as={BsFillPatchCheckFill} color='teal.500'></Icon> } </Td>
                 <Td isNumeric>
                   {u.tags?.split(',').map((t, k) => <Badge key={k} m={2} colorScheme='purple'>{t}</Badge>)}
                 </Td>
@@ -64,7 +66,7 @@ export default function DashboardSubredditIndexLayout() {
                     <Link to={`${u.id}`}>
                       <Button>Editar</Button>
                     </Link>
-                    <Button onClick={() => handleDeleteCliente(u.id)}>Eliminar</Button>
+                    <Button onClick={() => handleDeleteSubreddit(u.id)}>Eliminar</Button>
                   </ButtonGroup>
                 </Td>
               </Tr>
