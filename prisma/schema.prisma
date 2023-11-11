@@ -10,21 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id        Int         @id @default(autoincrement())
+model User {
+  id        Int        @id @default(autoincrement())
   firstName String
   lastName  String?
-  email     String      @unique
+  email     String     @unique
   password  String
-  role_id   Int         @default(2)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  status    Boolean     @default(true)
-  Customers Customers[]
+  role_id   Int        @default(2)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  status    Boolean    @default(true)
+  Customer  Customer[]
   Post      Post[]
 }
 
-model Customers {
+model Customer {
   id                  Int                   @id @default(autoincrement())
   firstName           String
   lastName            String?
@@ -41,11 +41,11 @@ model Customers {
   tags                String?
   status              Boolean               @default(true)
   user_id             Int
-  user                Users                 @relation(fields: [user_id], references: [id])
+  user                User                  @relation(fields: [user_id], references: [id])
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   Post                Post[]
-  Media               Media[]
+  Media               Medias[]
   CustomerOnSubreddit CustomerOnSubreddit[]
 }
 
@@ -62,22 +62,22 @@ model Post {
   postedAt          DateTime
   status            Boolean  @default(true)
 
-  customer Customers @relation(fields: [customer_id], references: [id])
-  user     Users     @relation(fields: [user_id], references: [id])
+  customer Customer @relation(fields: [customer_id], references: [id])
+  user     User     @relation(fields: [user_id], references: [id])
 
   @@index([customer_id], name: "idx_posts_customer_id")
   @@index([user_id], name: "idx_posts_user_id")
 }
 
-model Media {
-  id             Int       @id @default(autoincrement())
+model Medias {
+  id             Int      @id @default(autoincrement())
   tags           String
-  archivo_nombre String    @db.VarChar(255) // Se ajusta a VARCHAR(255) para ser más compatible con SQL
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  archivo_nombre String   @db.VarChar(255) // Se ajusta a VARCHAR(255) para ser más compatible con SQL
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
   customer_id    Int
-  customer       Customers @relation(fields: [customer_id], references: [id])
-  status         Boolean   @default(true)
+  customer       Customer @relation(fields: [customer_id], references: [id])
+  status         Boolean  @default(true)
 
   @@index([customer_id], name: "idx_medias_customer_id")
 }
@@ -98,7 +98,7 @@ model CustomerOnSubreddit {
   customer_id  Int
   subreddit_id Int
   status       Int
-  customer     Customers @relation(fields: [customer_id], references: [id])
+  customer     Customer  @relation(fields: [customer_id], references: [id])
   subreddit    Subreddit @relation(fields: [subreddit_id], references: [id])
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt

@@ -1,32 +1,32 @@
 
-import { PrismaClient } from "@prisma/client";
-import type { CreateUser, UpdateUser, GetAllUsers } from "./types/user";
+import { PrismaClient, User } from "@prisma/client";
+import type { CreateUser, UpdateUser } from "./types/user";
 
 const db = new PrismaClient();
 
-export const getAll = async (): Promise<GetAllUsers[]> => {
-    return await db.users.findMany();
+export const getAll = async (): Promise<User[]> => {
+    return await db.user.findMany();
 };
 
 export const findById = async (id: number) => {
-    return await db.users.findUnique({
+    return await db.user.findUnique({
         where: {
             id,
         },
     });
 };
 
-export const create = async (user: CreateUser): Promise<GetAllUsers> => {
+export const create = async (user: CreateUser): Promise<User> => {
     try {
-        return await db.users.create({ data: user });
+        return await db.user.create({ data: user });
     } catch (error) {
         console.error("Error creating contact:", error);
         throw error;
     }
 };
 
-export const update = async (id: number, user: UpdateUser): Promise<GetAllUsers> => {
-    return await db.users.update({
+export const update = async (id: number, user: UpdateUser): Promise<User> => {
+    return await db.user.update({
         where: {
             id,
         },
@@ -35,8 +35,8 @@ export const update = async (id: number, user: UpdateUser): Promise<GetAllUsers>
 };
 
 
-export const deleteContact = async (id: number): Promise<GetAllUsers> => {
-    return await db.users.delete({
+export const deleteContact = async (id: number): Promise<User> => {
+    return await db.user.delete({
         where: {
             id,
         },
