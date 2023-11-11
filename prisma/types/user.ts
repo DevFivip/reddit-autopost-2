@@ -1,22 +1,26 @@
-export type GetAllUsers = {
-  id: number;
-  firstName: string;
-  lastName: string;
+import { User } from "@prisma/client";
+
+
+
+export type CredentialsLogin = {
   email: string;
   password: string;
 };
 
-export type CreateUser = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
+export type AuthUser = {
+  id: number
+  firstName: User["firstName"];
+  lastName: User["lastName"];
+  email: User["email"];
+  token: string;
+  role_id: number;
 };
 
-export type UpdateUser = {
-  id?: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
+export const EmptyAutorizeUser: AuthUser = {
+  id: 0,
+  firstName: "",
+  lastName: "",
+  email: "",
+  token: "",
+  role_id: 0
 };

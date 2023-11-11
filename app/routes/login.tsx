@@ -29,17 +29,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 
-export const action = async ({ request, context }: ActionFunctionArgs) => {
-    const resp = await authenticator.authenticate("form", request, {
-        successRedirect: "/dashboard",
-        failureRedirect: "/login",
-        throwOnError: true,
-        context,
-    });
 
-    // console.log('ACTION DEL LOGIN',resp);
-    return resp;
-};
 
 export default function LoginPage() {
     const loaderData = useLoaderData();
@@ -101,3 +91,16 @@ export default function LoginPage() {
         </Flex>
     )
 }
+
+
+export const action = async ({ request, context }: ActionFunctionArgs) => {
+    const resp = await authenticator.authenticate("form", request, {
+        successRedirect: "/dashboard",
+        failureRedirect: "/login",
+        throwOnError: true,
+        context,
+    });
+
+    // console.log('ACTION DEL LOGIN',resp);
+    return resp;
+};

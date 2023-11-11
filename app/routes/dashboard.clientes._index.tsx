@@ -24,7 +24,6 @@ import { Customer } from "@prisma/client";
 
 export async function loader() {
   const customers: Customer[] = await getAll()
-
   return ({ customers });
 }
 
@@ -74,7 +73,7 @@ export default function DashboardClienteLayout() {
                 <Td>{u.firstName}  {u.lastName} </Td>
                 <Td>{u.email}</Td>
                 <Td isNumeric>
-                  {u.tags?.split(',').map((t) => <Badge m={2} colorScheme='purple'>{t}</Badge>)}
+                  {u.tags?.split(',').map((t, k) => <Badge key={k} m={2} colorScheme='purple'>{t}</Badge>)}
                 </Td>
                 <Td isNumeric >
                   <ButtonGroup gap='4'>

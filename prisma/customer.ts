@@ -1,5 +1,6 @@
 
 import { PrismaClient, Customer } from "@prisma/client";
+import { CreateCustomer, UpdateCustomer } from "./types/customer";
 // import type { Customer, UpdateUser } from "./types/user";
 
 const db = new PrismaClient();
@@ -16,7 +17,7 @@ export const findById = async (id: number) => {
     });
 };
 
-export const create = async (customer: Customer): Promise<Customer> => {
+export const create = async (customer: CreateCustomer): Promise<Customer> => {
     try {
         return await db.customer.create({ data: customer });
     } catch (error) {
@@ -25,7 +26,7 @@ export const create = async (customer: Customer): Promise<Customer> => {
     }
 };
 
-export const update = async (id: number, customer: Customer): Promise<Customer> => {
+export const update = async (id: number, customer: UpdateCustomer): Promise<Customer> => {
     return await db.customer.update({
         where: {
             id,

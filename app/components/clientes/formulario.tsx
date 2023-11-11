@@ -19,39 +19,50 @@ import {
     MdOutlineEmail
 } from 'react-icons/md'
 
-import { BsPerson, BsReddit, BsImage } from 'react-icons/bs'
+import { BsPerson, BsReddit, BsImage, BsTelegram } from 'react-icons/bs'
 
-import { TypeCliente } from '~/models/cliente'
 import { AutorizeUser } from '~/models/usuarios';
+import { Customer } from '@prisma/client';
+
+
 
 interface TypeComponentClienteFormulario {
     modoEdicion: boolean;
-    clienteEditar?: TypeCliente; // Datos del usuario en caso de edición
-    usuario: AutorizeUser;
+    clienteEditar?: Customer | null; // Datos del usuario en caso de edición
+    usuario: AutorizeUser | null;
 }
 
-export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario> = ({ modoEdicion, clienteEditar,usuario }) => {
+export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario> = ({ modoEdicion, clienteEditar, usuario }) => {
     const handleInputChange = (e: any): void => {
         // console.log(e)
     };
     return (<>
 
-        <VisuallyHiddenInput type="number" id='usuario_id' name='usuario_id' defaultValue={usuario?.id || ''} onChange={handleInputChange} />
+        <VisuallyHiddenInput type="number" id='user_id' name='user_id' defaultValue={usuario?.id || ''} onChange={handleInputChange} />
         <VisuallyHiddenInput type="number" name='id' id='nombre' defaultValue={clienteEditar?.id || ''} onChange={handleInputChange} />
-        <VisuallyHiddenInput type="number" name='status' id='nombre' defaultValue={clienteEditar?.status ? 1 : 0} onChange={handleInputChange} />
+        <VisuallyHiddenInput type="number" name='status' id='status' defaultValue={clienteEditar?.status ? 1 : 0} onChange={handleInputChange} />
 
         <Stack direction={['column', 'row']} spacing='50px'>
             <Box width={'100%'} borderWidth='1px' borderRadius='lg' overflow='hidden'>
                 <Box m={8}>
                     <VStack spacing={5}>
                         <Heading as={'h2'} size={'1x'}>Datos del Cliente</Heading>
-                        <FormControl id="name">
-                            <FormLabel>Nombre Completo</FormLabel>
+                        <FormControl id="firstName">
+                            <FormLabel>Nombre</FormLabel>
                             <InputGroup >
                                 <InputLeftElement pointerEvents="none">
                                     <BsPerson />
                                 </InputLeftElement>
-                                <Input type="text" name='nombre' id='nombre' defaultValue={clienteEditar?.nombre || ''} onChange={handleInputChange} />
+                                <Input type="text" name='firstName' id='firstName' defaultValue={clienteEditar?.firstName || ''} onChange={handleInputChange} />
+                            </InputGroup>
+                        </FormControl>
+                        <FormControl id="lastName">
+                        <FormLabel>Apellido</FormLabel>
+                            <InputGroup >
+                                <InputLeftElement pointerEvents="none">
+                                    <BsPerson />
+                                </InputLeftElement>
+                                <Input type="text" name='lastName' id='lastName' defaultValue={clienteEditar?.lastName || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
 
@@ -61,9 +72,21 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                                 <InputLeftElement pointerEvents="none">
                                     <MdOutlineEmail />
                                 </InputLeftElement>
-                                <Input type="text" name='email' defaultValue={clienteEditar?.email || ''} onChange={handleInputChange} />
+                                <Input type="text" name='email' id='email' defaultValue={clienteEditar?.email || ''} onChange={handleInputChange} />
                             </InputGroup>
                         </FormControl>
+
+                        <FormControl id="tags">
+                            <FormLabel>Tags (separar por comas)</FormLabel>
+                            <InputGroup >
+                                <InputLeftElement pointerEvents="none">
+                                    <BsPerson />
+                                </InputLeftElement>
+                                <Input type="text" name='tags' id='tags' defaultValue={clienteEditar?.tags || ''} onChange={handleInputChange} />
+                            </InputGroup>
+                        </FormControl>
+
+
                     </VStack>
                 </Box>
             </Box>
@@ -157,6 +180,24 @@ export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario
                     </VStack>
                 </Box>
             </Box>
+
+            <Box width={'100%'} borderWidth='1px' borderRadius='lg' overflow='hidden'>
+                <Box m={8}>
+                    <VStack spacing={5}>
+                        <Heading as={'h2'} size={'1x'}>Telegram Ajustes</Heading>
+                        <FormControl id="telegram_channel">
+                            <FormLabel>Enlace o Codigo del Canal ó Grupo</FormLabel>
+                            <InputGroup >
+                                <InputLeftElement pointerEvents="none">
+                                    <BsTelegram />
+                                </InputLeftElement>
+                                <Input type="text" name='telegram_channel' id='telegram_channel' defaultValue={clienteEditar?.telegram_channel || ''} />
+                            </InputGroup>
+                        </FormControl>
+                    </VStack>
+                </Box>
+            </Box>
+
         </Stack>
 
         <Flex>

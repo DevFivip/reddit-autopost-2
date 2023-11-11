@@ -3,16 +3,17 @@ import { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
 import { Layout } from "~/partials/Layout";
 import authenticator from "~/services/auth.server";
 import { AutorizeUser } from "~/models/usuarios";
+import { getAutorizeUser } from "~/middlewares/getAutorizeUser";
+
+import { AuthUser } from "../../prisma/types/user";
 
 
 
-export const loader = async ({ request }: LoaderFunctionArgs): Promise<AutorizeUser | string> => {
-  console.log('dashboard loader')
-  const res : AutorizeUser =  await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
-  });
-  return res;
-};
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user: AuthUser | null = await getAutorizeUser(request)
+  if (user === null) throw new Error('Usuario no autenticado')
+  return { user };
+}
 
 
 
@@ -30,6 +31,6 @@ export default function DashboardLayout() {
 
   </Layout>);
 }
-export const action = async ({ request }:ActionFunctionArgs): Promise<void> => {
+export const action = async ({ request }: ActionFunctionArgs): Promise<void> => {
   await authenticator.logout(request, { redirectTo: "/login" });
 };

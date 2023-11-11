@@ -2,7 +2,7 @@ import { IconButton, Avatar, Box, CloseButton, Flex, HStack, VStack, Icon, useCo
 import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu, FiBell, FiChevronDown } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import { Link, Form } from '@remix-run/react'
-import { AutorizeUser } from '~/models/usuarios'
+import { AuthUser } from '../../prisma/types/user'
 
 interface LinkItemProps {
   name: string
@@ -17,7 +17,7 @@ interface NavItemProps extends FlexProps {
 
 interface MobileProps extends FlexProps {
   onOpen: () => void
-  usuario: AutorizeUser
+  usuario: AuthUser
 }
 
 interface SidebarProps extends BoxProps {
@@ -140,7 +140,7 @@ const MobileNav = ({ usuario, onOpen, ...rest }: MobileProps) => {
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2">
-                  <Text fontSize="sm">{usuario?.nombre}</Text>
+                  <Text fontSize="sm">{usuario?.firstName}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Admin
                   </Text>

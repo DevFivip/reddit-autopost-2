@@ -1,6 +1,6 @@
 
 import { PrismaClient, User } from "@prisma/client";
-import type { CreateUser, UpdateUser } from "./types/user";
+import type {CreateUser, CredentialsLogin } from "./types/user";
 
 const db = new PrismaClient();
 
@@ -42,3 +42,13 @@ export const remove = async (id: number): Promise<User> => {
         },
     });
 };
+
+
+export const verifyLogin = async (credenciales: CredentialsLogin) => {
+    return await db.user.findUnique({
+        where: {
+            email: credenciales.email,
+            password: credenciales.password
+        },
+    });
+}
