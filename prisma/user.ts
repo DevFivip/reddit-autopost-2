@@ -35,7 +35,7 @@ export const update = async (id: number, user: UpdateUser): Promise<User> => {
 };
 
 
-export const deleteContact = async (id: number): Promise<User> => {
+export const remove = async (id: number): Promise<User> => {
     return await db.user.delete({
         where: {
             id,

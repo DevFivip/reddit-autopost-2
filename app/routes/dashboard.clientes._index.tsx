@@ -12,16 +12,20 @@ import {
   Flex,
   Box,
   ButtonGroup,
-  Button
+  Button,
+  Badge
 } from '@chakra-ui/react'
 
 import { useRevalidator } from "@remix-run/react";
 
-import { all, TypeCliente } from "~/models/cliente";
+// import { all, TypeCliente } from "~/models/cliente";
+import { getAll } from "prisma/customer";
+import { Customer } from "@prisma/client";
 
 export async function loader() {
-  const us = await all();
-  return (us);
+  const customers: Customer[] = await getAll()
+
+  return ({ customers });
 }
 
 
@@ -50,9 +54,8 @@ export default function DashboardClienteLayout() {
     }
   }
 
+  const { customers } = useLoaderData<typeof loader>();
 
-
-  const clientes: TypeCliente[] = useLoaderData();
   return (<>
     <Flex color='white'>
       <Box flex='1'>
@@ -62,15 +65,17 @@ export default function DashboardClienteLayout() {
               <Tr>
                 <Th>To convert</Th>
                 <Th>into</Th>
-                <Th isNumeric>multiply by</Th>
+                <Th isNumeric>Tags</Th>
                 <Th isNumeric>Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {clientes.map((u, i) => <Tr key={i}>
-                <Td>{u.nombre}</Td>
-                <Td>millimetres (mm)</Td>
-                <Td isNumeric>25.4</Td>
+              {customers.map((u, i) => <Tr key={i}>
+                <Td>{u.firstName}  {u.lastName} </Td>
+                <Td>{u.email}</Td>
+                <Td isNumeric>
+                  {u.tags?.split(',').map((t) => <Badge m={2} colorScheme='purple'>{t}</Badge>)}
+                </Td>
                 <Td isNumeric >
                   <ButtonGroup gap='4'>
                     <Link to={`${u.id}`}>
