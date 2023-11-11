@@ -21,7 +21,7 @@ import {
 
 import { BsPerson, BsReddit, BsImage, BsTelegram } from 'react-icons/bs'
 
-import { AutorizeUser } from '~/models/usuarios';
+import { AuthUser } from 'prisma/types/user';
 import { Customer } from '@prisma/client';
 
 
@@ -29,7 +29,7 @@ import { Customer } from '@prisma/client';
 interface TypeComponentClienteFormulario {
     modoEdicion: boolean;
     clienteEditar?: Customer | null; // Datos del usuario en caso de edición
-    usuario: AutorizeUser | null;
+    usuario: AuthUser | null;
 }
 
 export const ComponentClienteFormulario: React.FC<TypeComponentClienteFormulario> = ({ modoEdicion, clienteEditar, usuario }) => {
