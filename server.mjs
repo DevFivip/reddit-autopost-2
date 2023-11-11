@@ -37,4 +37,5 @@ app.all(
 );
 
 const port = 3006;
+
 app.listen(port, () => console.log("http://localhost:" + port));

@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id        Int         @id @default(autoincrement())
+  firstName String
+  lastName  String?
+  email     String      @unique
+  password  String
+  role_id   Int         @default(2)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  status    Boolean     @default(true)
+  Customers Customers[]
+  Post      Post[]
+}
+
+model Customers {
+  id                  Int                   @id @default(autoincrement())
+  firstName           String
+  lastName            String?
+  email               String?               @unique
+  reddit_username     String?
+  reddit_password     String?
+  reddit_clientId     String?
+  reddit_clientSecret String?
+  imgur_username      String?
+  imgur_password      String?
+  imgur_clientId      String?
+  imgur_clientSecret  String?
+  telegram_channel    String?
+  tags                String?
+  status              Boolean               @default(true)
+  user_id             Int
+  user                Users                 @relation(fields: [user_id], references: [id])
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  Post                Post[]
+  Media               Media[]
+  CustomerOnSubreddit CustomerOnSubreddit[]
+}
+
+model Post {
+  id                Int      @id @default(autoincrement())
+  titulo            String
+  imagen_name       String?
+  imagen_link_imgur String?
+  contenido         String?
+  customer_id       Int
+  user_id           Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  postedAt          DateTime
+  status            Boolean  @default(true)
+
+  customer Customers @relation(fields: [customer_id], references: [id])
+  user     Users     @relation(fields: [user_id], references: [id])
+
+  @@index([customer_id], name: "idx_posts_customer_id")
+  @@index([user_id], name: "idx_posts_user_id")
+}
+
+model Media {
+  id             Int       @id @default(autoincrement())
+  tags           String
+  archivo_nombre String    @db.VarChar(255) // Se ajusta a VARCHAR(255) para ser más compatible con SQL
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  customer_id    Int
+  customer       Customers @relation(fields: [customer_id], references: [id])
+  status         Boolean   @default(true)
+
+  @@index([customer_id], name: "idx_medias_customer_id")
+}
+
+model Subreddit {
+  id                  Int                   @id @default(autoincrement())
+  nombre              String                @unique
+  verificacion        Boolean
+  tags                String
+  status              Boolean               @default(true)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  CustomerOnSubreddit CustomerOnSubreddit[]
+}
+
+model CustomerOnSubreddit {
+  id           Int       @id @default(autoincrement())
+  customer_id  Int
+  subreddit_id Int
+  status       Int
+  customer     Customers @relation(fields: [customer_id], references: [id])
+  subreddit    Subreddit @relation(fields: [subreddit_id], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([customer_id], name: "idx_subreddit_customer_id")
+  @@index([subreddit_id], name: "idx_subreddit_subreddit_id")
+}
