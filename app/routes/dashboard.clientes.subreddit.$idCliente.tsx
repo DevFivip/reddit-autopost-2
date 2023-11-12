@@ -7,6 +7,7 @@ import { getAutorizeUser } from "~/middlewares/getAutorizeUser";
 
 import { getAll } from "prisma/subreddit";
 import { findById, update, customersWithSubreddits } from "prisma/customer";
+import { asingnationUpdate } from "prisma/subreddit";
 // import { Customer } from "@prisma/client";
 // import { UpdateCustomer } from "prisma/types/customer";
 import { Customer, Subreddit, CustomerOnSubreddit } from "@prisma/client";
@@ -49,7 +50,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 export default function DashboardClienteEdit() {
     const { customer, user, SubredditsOnCustomers } = useLoaderData<typeof loader>();
-    return (<Form method="POST" action={`/dashboard/clientes/${customer.id}`} >
+    return (<Form method="POST">
         <ComponentAsignarSubredditFormulario modoEdicion={true} subredditOnCustomerEditar={SubredditsOnCustomers} usuario={user} />
     </Form>);
 }
@@ -57,29 +58,15 @@ export default function DashboardClienteEdit() {
 
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
+    
     switch (request.method) {
         case 'POST': // editar
+            const customer_id= params.idCliente || 0;
             const form = await request.formData();
-            const idValue = form.get('id');
-            const customer: UpdateCustomer = {
-                id: parseInt(idValue as string),
-                firstName: form.get('firstName') as string,
-                lastName: form.get('lastName') as string,
-                email: form.get('email') as string,
-                tags: form.get('tags') as string,
-                user_id: parseInt(form.get('user_id') as string),
-                reddit_username: form.get('reddit_username') as string,
-                reddit_password: form.get('reddit_password') as string,
-                reddit_clientId: form.get('reddit_clientId') as string,
-                reddit_clientSecret: form.get('reddit_clientSecret') as string,
-                imgur_username: form.get('imgur_username') as string,
-                imgur_password: form.get('imgur_password') as string,
-                imgur_clientId: form.get('imgur_clientId') as string,
-                imgur_clientSecret: form.get('imgur_clientSecret') as string,
-                telegram_channel: form.get('telegram_channel') as string
-            }
-            await update(customer.id, customer);
-
+            const asignadosRes = form.getAll('asignado');
+            const asignados: number[] = asignadosRes.map((v,k)=>+v);
+            await asingnationUpdate(+customer_id, asignados);
+            // return json(asignados);
             return redirect(`/dashboard/clientes`);
             break;
 

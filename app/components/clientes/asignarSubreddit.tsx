@@ -57,7 +57,7 @@ export const ComponentAsignarSubredditFormulario: React.FC<TypeComponentAsignarS
                     </VStack>
 
                     <List spacing={3}>
-                        {subredditOnCustomerEditar?.map((sr) => <ListItem borderWidth='1px' borderRadius='lg' p={2}> <Checkbox defaultChecked={sr?.status} id='verificacion' name='verificacion' value={'requiere'}>{sr.nombre}  {!sr.verificacion || <Icon as={BsFillPatchCheckFill} color='teal.500'></Icon>}  {sr.tags?.split(',').map((t, k) => <Badge key={k} m={2} colorScheme='purple'>{t}</Badge>)} </Checkbox> </ListItem>)}
+                        {subredditOnCustomerEditar?.map((sr) => <ListItem borderWidth='1px' borderRadius='lg' p={2}> <Checkbox defaultChecked={sr?.status} id='asignado' name={`asignado`} value={sr.id}>{sr.nombre}  {!sr.verificacion || <Icon as={BsFillPatchCheckFill} color='teal.500'></Icon>}  {sr.tags?.split(',').map((t, k) => <Badge key={k} m={2} colorScheme='purple'>{t}</Badge>)} </Checkbox> </ListItem>)}
                     </List>
 
 
