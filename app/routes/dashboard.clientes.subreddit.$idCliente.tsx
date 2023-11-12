@@ -16,12 +16,14 @@ import { typeSubredditOnCustomer } from "prisma/types/subreddit";
 import { AuthUser } from 'prisma/types/user';
 import { ComponentAsignarSubredditFormulario } from "~/components/clientes/asignarSubreddit";
 
+import { CustomerWithCustomerOnSubreddit } from "prisma/types/customer";
+
 
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
     const id = params.idCliente as string;
 
-    const customer: Customer | null = await customersWithSubreddits(+id);
+    const customer: CustomerWithCustomerOnSubreddit | null = await customersWithSubreddits(+id);
     if (!customer) throw new Response("customer no encontrado", { status: 404 });
 
     const subreddits: Subreddit[] | null = await getAll({ where: { status: true } });
@@ -31,7 +33,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     if (user === null) throw new Error('Usuario no autenticado')
 
     const SubredditsOnCustomers: typeSubredditOnCustomer[] = subreddits.map((s: Subreddit, k) => {
-        let fund: typeSubredditOnCustomer = customer.CustomerOnSubreddit.find((asignado: CustomerOnSubreddit) => asignado.subreddit_id === s.id);
+        let fund: typeSubredditOnCustomer | undefined = customer.CustomerOnSubreddit.find((asignado: CustomerOnSubreddit) => asignado.subreddit_id === s.id);
         s.status = !!fund
         // if (fund) {
         //     s.asingnado = true
@@ -58,13 +60,12 @@ export default function DashboardClienteEdit() {
 
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-    
     switch (request.method) {
         case 'POST': // editar
-            const customer_id= params.idCliente || 0;
+            const customer_id = params.idCliente || 0;
             const form = await request.formData();
             const asignadosRes = form.getAll('asignado');
-            const asignados: number[] = asignadosRes.map((v,k)=>+v);
+            const asignados: number[] = asignadosRes.map((v, k) => +v);
             await asingnationUpdate(+customer_id, asignados);
             // return json(asignados);
             return redirect(`/dashboard/clientes`);

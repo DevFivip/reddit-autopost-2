@@ -1,5 +1,5 @@
 import { PrismaClient, Customer } from "@prisma/client";
-import { CreateCustomer, UpdateCustomer } from "./types/customer";
+import { CreateCustomer, UpdateCustomer, CustomerWithCustomerOnSubreddit} from "./types/customer";
 // import type { Customer, UpdateUser } from "./types/user";
 
 const db = new PrismaClient();
@@ -43,7 +43,7 @@ export const remove = async (id: number): Promise<Customer> => {
     });
 };
 
-export const customersWithSubreddits = async (id: number): Promise<Customer> => {
+export const customersWithSubreddits = async (id: number): Promise<CustomerWithCustomerOnSubreddit | null> => {
     return await db.customer.findUnique({
         include: {
             CustomerOnSubreddit: true,

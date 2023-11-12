@@ -1,4 +1,4 @@
-import { Customer } from "@prisma/client";
+import { Customer, CustomerOnSubreddit } from "@prisma/client";
 
 
 // Ahora, creemos una nueva interfaz sin las propiedades 'prop3' y 'prop4'
@@ -8,4 +8,9 @@ export interface CreateCustomer extends Omit<Customer, 'createdAt' | 'updatedAt'
 // Ahora, creemos una nueva interfaz sin las propiedades 'prop3' y 'prop4'
 export interface UpdateCustomer extends Omit<Customer, 'createdAt' | 'updatedAt'  | 'status'> {
     // Aquí puedes agregar propiedades adicionales si lo deseas
+}
+
+export interface CustomerWithCustomerOnSubreddit extends Customer {
+    // Aquí puedes agregar propiedades adicionales si lo deseas
+    CustomerOnSubreddit: CustomerOnSubreddit[]
 }
