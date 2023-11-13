@@ -57,13 +57,15 @@ model Post {
   contenido         String?
   customer_id       Int
   user_id           Int
+  subreddit_id      Int @default(1)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   postedAt          DateTime
   status            Boolean  @default(true)
 
-  customer Customer @relation(fields: [customer_id], references: [id])
-  user     User     @relation(fields: [user_id], references: [id])
+  subreddit Subreddit @relation(fields: [subreddit_id], references: [id])
+  customer  Customer  @relation(fields: [customer_id], references: [id])
+  user      User      @relation(fields: [user_id], references: [id])
 
   @@index([customer_id], name: "idx_posts_customer_id")
   @@index([user_id], name: "idx_posts_user_id")
@@ -91,6 +93,7 @@ model Subreddit {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   CustomerOnSubreddit CustomerOnSubreddit[]
+  Post                Post[]
 }
 
 model CustomerOnSubreddit {
