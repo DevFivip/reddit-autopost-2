@@ -24,26 +24,32 @@ import { BsPerson, BsReddit, BsImage, BsTelegram } from "react-icons/bs";
 
 import { AuthUser } from "prisma/types/user";
 // import { Customer } from '@prisma/client';
-import { UpdateCustomer } from "prisma/types/customer";
+import { UpdatePost } from "prisma/types/post";
 import { useState } from "react";
+import { Customer, Subreddit } from "@prisma/client";
 
 interface TypeComponentPostFormulario {
     modoEdicion: boolean;
-    clienteEditar?: UpdateCustomer | null; // Datos del usuario en caso de edición
+    postEditar?: UpdatePost | null; // Datos del usuario en caso de edición
     usuario: AuthUser | null;
+    subreddits: Subreddit[];
+    customers: Customer[];
 }
 
 export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
     modoEdicion,
-    clienteEditar,
+    postEditar,
     usuario,
+    subreddits,
+    customers
+
 }) => {
 
     interface TypeFile {
         file: string | null
-        previewUrl: ArrayBuffer| string | null
+        previewUrl: ArrayBuffer | string | null
         fileType: string | null
-    
+
     }
 
     const [state, setState] = useState<TypeFile>({
@@ -87,14 +93,14 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                     <img
                         src={state.previewUrl}
                         alt="Preview"
-                        style={{ maxWidth: '100%', maxHeight: '200px' }}
+                        style={{ maxWidth: '250px', maxHeight: '200px' }}
                     />
                 );
             } else if (state.fileType && state.fileType.startsWith('video')) {
                 return (
                     <video
                         controls
-                        width="100%"
+                        width="250px"
                         height="auto"
                     >
                         <source src={state.previewUrl} type={state.fileType} />
@@ -119,10 +125,10 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                 type="number"
                 name="id"
                 id="nombre"
-                defaultValue={clienteEditar?.id || ""}
+                defaultValue={postEditar?.id || ""}
                 onChange={handleInputChange}
             />
-            {/* <VisuallyHiddenInput type="number" name='status' id='status' defaultValue={clienteEditar?.status ? 1 : 0} onChange={handleInputChange} /> */}
+            {/* <VisuallyHiddenInput type="number" name='status' id='status' defaultValue={postEditar?.status ? 1 : 0} onChange={handleInputChange} /> */}
 
             <Stack direction={["column", "row"]} spacing="50px">
                 <Box
@@ -143,7 +149,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                         type="text"
                                         name="titulo"
                                         id="titulo"
-                                        defaultValue={clienteEditar?.titulo || ""}
+                                        defaultValue={postEditar?.titulo || ""}
                                         onChange={handleInputChange}
                                     />
                                 </InputGroup>
@@ -156,20 +162,9 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                         type="text"
                                         name="contenido"
                                         id="contenido"
-                                        defaultValue={clienteEditar?.contenido || ""}
+                                        defaultValue={postEditar?.contenido || ""}
                                         onChange={handleInputChange}
                                     />
-                                </InputGroup>
-                            </FormControl>
-
-                            <FormControl id="customer_id">
-                                <FormLabel>Cliente</FormLabel>
-                                <InputGroup>
-                                    <Select placeholder="Seleccione Cliente" name="customer_id">
-                                        <option value="option1">Option 1</option>
-                                        <option value="option2">Option 2</option>
-                                        <option value="option3">Option 3</option>
-                                    </Select>
                                 </InputGroup>
                             </FormControl>
                         </VStack>
@@ -186,16 +181,12 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                             <Heading as={"h2"} size={"1x"}>
                                 Reddit Publicación
                             </Heading>
-                            <FormControl id="">
-                                <FormLabel>Subreddit</FormLabel>
+
+                            <FormControl id="customer_id">
+                                <FormLabel>Cliente</FormLabel>
                                 <InputGroup>
-                                    <Select
-                                        placeholder="Seleccione Subreddit"
-                                        name="subreddit_id"
-                                    >
-                                        <option value="option1">Option 1</option>
-                                        <option value="option2">Option 2</option>
-                                        <option value="option3">Option 3</option>
+                                    <Select placeholder="Seleccione Cliente" name="customer_id">
+                                        {customers.map((c, k) => <option key={k} value={c.id}>{c.firstName} {c.lastName} {c.tags}</option>)}
                                     </Select>
                                 </InputGroup>
                             </FormControl>
@@ -209,17 +200,25 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                     <Input
                                         type="datetime-local"
                                         name="postedAt"
-                                        defaultValue={clienteEditar?.postedAt || ""}
+                                        defaultValue={postEditar?.postedAt || ""}
                                         onChange={handleInputChange}
                                     />
+                                </InputGroup>
+                            </FormControl>
+
+                            <FormControl id="subreddit_id">
+                                <FormLabel>Subreddit</FormLabel>
+                                <InputGroup>
+                                    <Select placeholder="Seleccione Subreddit" name="subreddit_id">
+                                        {subreddits.map((s, k) => <option key={k} value={s.id}>{s.nombre} {s.tags}</option>)}
+                                    </Select>
                                 </InputGroup>
                             </FormControl>
                         </VStack>
                     </Box>
                 </Box>
-
             </Stack>
-            <Stack>
+            <Stack mt={5}>
                 <Box
                     width={"100%"}
                     borderWidth="1px"
@@ -228,13 +227,14 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                 >
                     <Box m={8}>
                         <VStack spacing={5}>
+
                             <Heading as={"h2"} size={"1x"}>
                                 Reddit Publicación
                             </Heading>
 
 
                             <FormControl id="">
-                                <FormLabel>Subreddit</FormLabel>
+                                <FormLabel>Selecciona Archivo Media</FormLabel>
                                 <InputGroup>
                                     <Input
                                         type="file"
@@ -244,8 +244,11 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                 </InputGroup>
                             </FormControl>
 
-                            <div>{renderPreview()}</div>
-
+                            <Box boxSize='sm'>
+                                <VStack>
+                                    {renderPreview()}
+                                </VStack>
+                            </Box>
                         </VStack>
                     </Box>
                 </Box>

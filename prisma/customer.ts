@@ -4,8 +4,8 @@ import { CreateCustomer, UpdateCustomer, CustomerWithCustomerOnSubreddit} from "
 
 const db = new PrismaClient();
 
-export const getAll = async (): Promise<Customer[]> => {
-    return await db.customer.findMany();
+export const getAll = async (query:any): Promise<Customer[]> => {
+    return await db.customer.findMany(query);
 };
 
 export const findById = async (id: number) => {
