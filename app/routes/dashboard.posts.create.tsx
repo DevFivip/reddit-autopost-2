@@ -9,11 +9,13 @@ import { ActionFunctionArgs, LoaderFunctionArgs, json } from '@remix-run/node';
 import { getAutorizeUser } from '~/middlewares/getAutorizeUser';
 import { getAll } from 'prisma/subreddit';
 import { getAll as getAllCustomers } from 'prisma/customer';
+import { create } from 'prisma/posts';
 // import { CreatePost } from 'prisma/types/post';
 import { AuthUser } from 'prisma/types/user';
 import { ComponentPostFormulario } from '~/components/post/formulario';
 import { ComponentPostFormulario2 } from '~/components/post/formulario2';
-import { Customer, Subreddit } from '@prisma/client';
+import { Customer, Post, Subreddit } from '@prisma/client';
+import { CreatePost } from 'prisma/types/post';;
 import { Button } from '@chakra-ui/react';
 import { useState } from 'react';
 // import { create } from "prisma/posts"
@@ -71,7 +73,7 @@ export default function DashboardPostCreate() {
     // console.log(user,subreddits,customers);
     return (<>
 
-        <Form method="post" encType='multipart/form-data'>
+        <Form method="post">
             <ComponentPostFormulario modoEdicion={false} usuario={user} subreddits={subreddits} customers={customers} changeState={setState} formState={state} />
             {/* <ComponentPostFormulario2 /> */}
             <Button onClick={(e) => { e.preventDefault(); send() }} > ENVIAR xd</Button>
@@ -82,27 +84,24 @@ export default function DashboardPostCreate() {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 
-
-    const getCurrentUnixTimestamp = () => {
-        return Math.floor(new Date().getTime() / 1000);
+    const body = await request.formData();
+    const post: CreatePost = {
+        titulo: body.get('titulo') as string,
+        contenido: body.get('contenido') as string,
+        imagen_name: body.get('imagen_name') as string,
+        customer_id: parseInt(body.get('customer_id') as string),
+        user_id: parseInt(body.get('user_id') as string),
+        subreddit_id: parseInt(body.get('subreddit_id') as string),
+        postedAt: new Date(body.get('postedAt') as string),
     }
 
-    const uploadHandler = unstable_createFileUploadHandler({
-        avoidFileConflicts: true,
-        maxPartSize: 5_000_000,
-        directory: './public/uploads',
-        file: ({ filename }) => `${getCurrentUnixTimestamp()}_${filename}`,
-    });
-
-
-    const formDataFile = await unstable_parseMultipartFormData(request, uploadHandler);
 
     console.log('##################################################')
     console.log('##################################################')
     console.log('##################################################')
     console.log('##################################################')
-    const obbj = Object.fromEntries(formDataFile);
-    console.log(obbj);
+
+    console.log(post);
     console.log('##################################################')
     console.log('##################################################')
     console.log('##################################################')
@@ -131,6 +130,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     //     //     verificacion: Boolean(form.get('verificacion')),
     //     // }
 
-    //     // await create(subreddit)
+    await create(post)
     return redirect(`/dashboard/posts`);
 };

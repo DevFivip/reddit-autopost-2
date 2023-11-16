@@ -9,7 +9,6 @@ export const getAll = async (query: any = false): Promise<Post[]> => {
 };
 
 export const create = async (post: CreatePost): Promise<Post | Error> => {
-    console.log(post);
     try {
         return await db.post.create({ data: post });
     } catch (error) {

@@ -53,7 +53,7 @@ interface TypeComponentClientGallery {
     idCliente: string | null;
 }
 
-export const ComponentClientGallery: React.FC<TypeComponentClientGallery> = ({  subredditOnCustomerEditar, archivos, idCliente }) => {
+export const ComponentClientGallery: React.FC<TypeComponentClientGallery> = ({ subredditOnCustomerEditar, archivos, idCliente }) => {
     const handleInputChange = (e: any): void => {
         // console.log(e)
     };
@@ -88,7 +88,7 @@ export const ComponentClientGallery: React.FC<TypeComponentClientGallery> = ({  
 
             <SimpleGrid minChildWidth='100px' spacing='10px'>
 
-                {archivos.map((dir, k) => {
+                {!!archivos && archivos.map((dir, k) => {
                     return (
                         <Card maxW='sm' key={k}>
                             <CardBody>

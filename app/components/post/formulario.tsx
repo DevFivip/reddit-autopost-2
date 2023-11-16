@@ -16,6 +16,15 @@ import {
     Select,
     List,
     ListItem,
+    SimpleGrid,
+    Card,
+    CardBody,
+    Divider,
+    CardFooter,
+    Image,
+    useRadio,
+    Radio,
+    RadioGroup,
 } from "@chakra-ui/react";
 
 import { useEffect } from 'react'
@@ -26,7 +35,7 @@ import { BsPerson, BsReddit, BsImage, BsTelegram } from "react-icons/bs";
 
 import { AuthUser } from "prisma/types/user";
 // import { Customer } from '@prisma/client';
-import { UpdatePost } from "prisma/types/post";
+
 import { useState } from "react";
 import { Customer, Subreddit } from "@prisma/client";
 import { formFile } from "~/routes/dashboard.posts.create";
@@ -43,6 +52,7 @@ interface TypeComponentPostFormulario {
     formState: formFile;
 }
 
+
 export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
     modoEdicion,
     postEditar,
@@ -53,26 +63,22 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
     formState
 }) => {
 
-    interface TypeFile {
-        file: string | null
-        previewUrl: ArrayBuffer | string | null
-        fileType: string | null
-    }
 
-    const [state, setState] = useState<TypeFile>({
-        file: null,
-        previewUrl: null,
-        fileType: null,
-    });
-
-    const [idCliente, setIdCliente] = useState<string | null>(null);
+    const [idCliente, setIdCliente] = useState<string | null>('1');
     const [archivos, setArchivos] = useState<[]>([]);
 
     useEffect(() => {
-        const res: any = obtenerArchivosEnCarpeta(`./public/uploads/${idCliente}`)
-        console.log(res)
-        setArchivos(res);
+        (async () => {
+            const res: any = await getFiles(idCliente)
+            setArchivos(res);
+        })()
     }, [idCliente]);
+
+    const getFiles = async (idCliente: string | null) => {
+        const response = await fetch(`/dashboard/fileroute/${idCliente}`);
+        const body = await response.json()
+        return body;
+    }
 
     const handleTitulo = (titulo: string) => {
         changeState({
@@ -86,78 +92,16 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
         const state = { ...formState, contenido }
         changeState(state);
 
-        console.log('NUEVO', formState);
 
     }
-    const handleFile = (e: any) => {
-        const media_file = e.target.files;
-        console.log(e.target)
 
-        changeState({
-            ...formState,
-            media_file
-        })
-
-        console.log(formState)
-    }
 
     const handleInputChange = (e: any): void => {
         // console.log(e)
     };
 
-    const handleFileChange = (event: any) => {
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                setState({
-                    file: file,
-                    previewUrl: reader.result,
-                    fileType: file.type,
-                });
-            };
-
-            reader.readAsDataURL(file);
-        } else {
-            setState({
-                file: null,
-                previewUrl: null,
-                fileType: null,
-            });
-        }
-    };
-
-    const renderPreview = () => {
-        if (state.previewUrl) {
-            if (state.fileType && state.fileType.startsWith('image')) {
-                return (
-                    <img
-                        src={state.previewUrl}
-                        alt="Preview"
-                        style={{ maxWidth: '250px', maxHeight: '200px' }}
-                    />
-                );
-            } else if (state.fileType && state.fileType.startsWith('video')) {
-                return (
-                    <video
-                        controls
-                        width="250px"
-                        height="auto"
-                    >
-                        <source src={state.previewUrl} type={state.fileType} />
-                        Your browser does not support the video tag.
-                    </video>
-                );
-            }
-        }
-
-        return null;
-    };
     return (
         <>
-        <pre>ID CLIENTE; {idCliente}</pre>
             <VisuallyHiddenInput
                 type="number"
                 id="user_id"
@@ -245,12 +189,6 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                         type="datetime-local"
                                         name="postedAt"
                                         defaultValue={postEditar?.postedAt || ""}
-                                        onChange={<Input
-                                            type="datetime-local"
-                                            name="postedAt"
-                                            defaultValue={postEditar?.postedAt || ""}
-                                            onChange={handleInputChange}
-                                        />}
                                     />
                                 </InputGroup>
                             </FormControl>
@@ -275,21 +213,44 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                     overflow="hidden"
                 >
                     <Box m={8}>
-                        <VStack spacing={5}>
 
-                            <Heading as={"h2"} size={"1x"}>
-                                Reddit Publicación
-                            </Heading>
+                        <Heading as={"h2"} size={"1x"}>
+                            Galeria
+                        </Heading>
 
+                        <RadioGroup defaultValue='1' name="imagen_name">
+                            <SimpleGrid minChildWidth='250px' spacing='10px'>
+                                {!!archivos && archivos.map((dir, k) => {
+                                    return (
+                                        <Card key={k}>
+                                            <Radio value={dir} cursor='pointer' required
+                                                borderWidth='1px'
+                                                borderRadius='md'
+                                                boxShadow='md'
+                                                _checked={{
+                                                    bg: 'green.500',
+                                                    color: 'white',
+                                                    borderColor: 'green.400',
+                                                }}
+                                                _focus={{
+                                                    boxShadow: 'outline',
+                                                }}
+                                            >
+                                                <CardBody>
+                                                    <Image
+                                                        src={`/public/uploads/${idCliente}/${dir}`}
+                                                        alt=''
+                                                        maxHeight={'250px'}
+                                                    />
+                                                </CardBody>
+                                            </Radio>
+                                        </Card>
+                                    )
+                                })
+                                }
+                            </SimpleGrid>
+                        </RadioGroup>
 
-                            <ComponentClientGallery archivos={archivos} idCliente={idCliente} />
-
-                            <Box boxSize='sm'>
-                                <VStack>
-                                    {renderPreview()}
-                                </VStack>
-                            </Box>
-                        </VStack>
                     </Box>
                 </Box>
             </Stack>

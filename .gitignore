@@ -3,4 +3,5 @@ database.db
 /.cache
 /build
 /public/build
+/public/uploads
 .env

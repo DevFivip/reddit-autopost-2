@@ -35,7 +35,7 @@ export const obtenerArchivosEnCarpeta = (rutaCarpeta: string): string[] => {
 
         console.log(archivos);
         return archivosFiltrados;
-    } catch (error) {f
+    } catch (error) {
         console.log(error);
         return [];
     }
