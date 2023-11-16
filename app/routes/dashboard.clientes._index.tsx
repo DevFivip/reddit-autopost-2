@@ -21,7 +21,7 @@ import { useRevalidator } from "@remix-run/react";
 // import { all, TypeCliente } from "~/models/cliente";
 import { getAll } from "prisma/customer";
 import { Customer } from "@prisma/client";
-import { BsReddit,BsImage } from "react-icons/bs";
+import { BsReddit,BsImage, BsCalendar } from "react-icons/bs";
 
 export async function loader() {
   const customers: Customer[] = await getAll()
@@ -78,6 +78,9 @@ export default function DashboardClienteLayout() {
                 </Td>
                 <Td isNumeric >
                   <ButtonGroup gap='4'>
+                    <Link to={`calendar/${u.id}`}>
+                      <Button><BsCalendar /></Button>
+                    </Link>
                     <Link to={`gallery/${u.id}`}>
                       <Button><BsImage /></Button>
                     </Link>
