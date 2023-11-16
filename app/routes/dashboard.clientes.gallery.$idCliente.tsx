@@ -14,9 +14,6 @@ import { CreateCustomer } from 'prisma/types/customer';
 import { create } from 'prisma/customer';
 import { AuthUser } from 'prisma/types/user';
 import { ComponentClientGallery } from '~/components/gallery/componentClienteGallery';
-import { Toast, useToast } from '@chakra-ui/react';
-
-
 
 export const obtenerArchivosEnCarpeta = (rutaCarpeta: string): string[] => {
     // Obtiene la lista de archivos en la carpeta

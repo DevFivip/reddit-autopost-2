@@ -13,7 +13,8 @@ import {
   Box,
   ButtonGroup,
   Button,
-  Badge
+  Badge,
+  Image
 } from '@chakra-ui/react'
 
 import { useRevalidator } from "@remix-run/react";
@@ -45,7 +46,7 @@ export default function DashboardPostsIndexLayout() {
 
   const handleDeleteCliente = async (id: string | number) => {
     try {
-      const response = await fetch(`/dashboard/clientes/${id}`, {
+      const response = await fetch(`/dashboard/posts/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -74,6 +75,7 @@ export default function DashboardPostsIndexLayout() {
           <Table variant='simple'>
             <Thead>
               <Tr>
+                <Th>Post</Th>
                 <Th>Titulo</Th>
                 <Th>Contenido</Th>
                 <Th>Cliente</Th>
@@ -84,6 +86,12 @@ export default function DashboardPostsIndexLayout() {
             </Thead>
             <Tbody>
               {posts.map((p, i) => <Tr key={i}>
+                <Td><Image
+
+                  boxSize='50px'
+                  src={`/public/uploads/${p?.customer?.id}/${p?.imagen_name}`}
+                  alt={`${p?.customer?.firstName} ${p?.customer?.lastName}`}
+                /></Td>
                 <Td>{p.titulo}</Td>
                 <Td>{p.contenido}</Td>
                 <Td><Link to={`/dashboard/clientes/${p?.customer?.id}`}>{p?.customer?.firstName} {p?.customer?.lastName}</Link></Td>
@@ -91,9 +99,6 @@ export default function DashboardPostsIndexLayout() {
                 <Td>  {p.status ? <Badge colorScheme='red'>{'Pendiente'}</Badge> : <Badge colorScheme='green'>{'Pendiente'}</Badge>}</Td>
                 <Td isNumeric >
                   <ButtonGroup gap='4'>
-                    <Link to={`subreddit/${p.id}`}>
-                      <Button><BsReddit /></Button>
-                    </Link>
                     <Link to={`${p.id}`}>
                       <Button>Editar</Button>
                     </Link>

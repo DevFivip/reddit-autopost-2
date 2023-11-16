@@ -9,3 +9,7 @@ export interface PostWithCustomerAndUser extends Post {
 export interface CreatePost  extends Omit<Post,'imagen_link_imgur'| 'createdAt' | 'updatedAt' | 'id' | 'status' | 'customer'> {
     // Aquí puedes agregar propiedades adicionales si lo deseas
 }
+
+export interface UpdatePost  extends Omit<Post,'imagen_link_imgur'| 'createdAt' | 'updatedAt' | 'status' | 'customer'> {
+    // Aquí puedes agregar propiedades adicionales si lo deseas
+}

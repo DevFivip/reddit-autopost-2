@@ -1,6 +1,6 @@
 
 import { PrismaClient, Post } from "@prisma/client";
-import { CreatePost } from "./types/post";
+import { CreatePost, UpdatePost } from "./types/post";
 
 const db = new PrismaClient();
 
@@ -16,3 +16,28 @@ export const create = async (post: CreatePost): Promise<Post | Error> => {
         throw error;
     }
 }
+
+export const findById = async (id: number) => {
+    return await db.post.findUnique({
+        where: {
+            id,
+        },
+    });
+};
+
+export const update = async (id: number, post: UpdatePost): Promise<Post> => {
+    return await db.post.update({
+        where: {
+            id,
+        },
+        data: post,
+    });
+};
+
+export const remove = async (id: number ): Promise<Post> => {
+    return await db.post.delete({
+        where: {
+            id,
+        },
+    });
+};

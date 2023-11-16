@@ -37,14 +37,13 @@ import { AuthUser } from "prisma/types/user";
 // import { Customer } from '@prisma/client';
 
 import { useState } from "react";
-import { Customer, Subreddit } from "@prisma/client";
+import { Customer, Post, Subreddit } from "@prisma/client";
 import { formFile } from "~/routes/dashboard.posts.create";
-import { ComponentClientGallery } from "../gallery/componentClienteGallery";
-import { obtenerArchivosEnCarpeta } from "~/routes/dashboard.clientes.gallery.$idCliente";
+import { dateFormat, dbToInputDateFormat } from "~/utils/dateFormat";
 
 interface TypeComponentPostFormulario {
     modoEdicion: boolean;
-    postEditar?: UpdatePost | null; // Datos del usuario en caso de edición
+    postEditar?: Post | null; // Datos del usuario en caso de edición
     usuario: AuthUser | null;
     subreddits: Subreddit[];
     customers: Customer[];
@@ -64,37 +63,22 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
 }) => {
 
 
-    const [idCliente, setIdCliente] = useState<string | null>('1');
+    const [idCliente, setIdCliente] = useState<string | number | null>(postEditar?.customer_id || null);
     const [archivos, setArchivos] = useState<[]>([]);
 
     useEffect(() => {
         (async () => {
+            // console.log({idCliente})
             const res: any = await getFiles(idCliente)
             setArchivos(res);
         })()
     }, [idCliente]);
 
-    const getFiles = async (idCliente: string | null) => {
+    const getFiles = async (idCliente: string | number | null) => {
         const response = await fetch(`/dashboard/fileroute/${idCliente}`);
         const body = await response.json()
         return body;
     }
-
-    const handleTitulo = (titulo: string) => {
-        changeState({
-            ...formState,
-            titulo: titulo.toUpperCase()
-        })
-    }
-    const handleContenido = (contenido: string) => {
-
-        console.log(formState);
-        const state = { ...formState, contenido }
-        changeState(state);
-
-
-    }
-
 
     const handleInputChange = (e: any): void => {
         // console.log(e)
@@ -138,7 +122,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                         name="titulo"
                                         id="titulo"
                                         defaultValue={postEditar?.titulo || ""}
-                                        onChange={(e) => { handleTitulo(e.target.value) }}
+
                                     />
                                 </InputGroup>
                             </FormControl>
@@ -151,7 +135,6 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                         name="contenido"
                                         id="contenido"
                                         defaultValue={postEditar?.contenido || ""}
-                                        onChange={(e) => { handleContenido(e.target.value) }}
                                     />
                                 </InputGroup>
                             </FormControl>
@@ -173,7 +156,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                             <FormControl id="customer_id">
                                 <FormLabel>Cliente</FormLabel>
                                 <InputGroup>
-                                    <Select placeholder="Seleccione Cliente" name="customer_id" onChange={(e) => { setIdCliente(e.target.value) }}>
+                                    <Select placeholder="Seleccione Cliente" defaultValue={postEditar?.customer_id || ""} name="customer_id" onChange={(e) => { setIdCliente(e.target.value) }}>
                                         {customers.map((c, k) => <option key={k} value={c.id}>{c.firstName} {c.lastName} {c.tags}</option>)}
                                     </Select>
                                 </InputGroup>
@@ -188,7 +171,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                     <Input
                                         type="datetime-local"
                                         name="postedAt"
-                                        defaultValue={postEditar?.postedAt || ""}
+                                        defaultValue={dbToInputDateFormat(postEditar?.postedAt)}
                                     />
                                 </InputGroup>
                             </FormControl>
@@ -196,7 +179,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                             <FormControl id="subreddit_id">
                                 <FormLabel>Subreddit</FormLabel>
                                 <InputGroup>
-                                    <Select placeholder="Seleccione Subreddit" name="subreddit_id">
+                                    <Select placeholder="Seleccione Subreddit" name="subreddit_id" defaultValue={postEditar?.subreddit_id || ''}>
                                         {subreddits.map((s, k) => <option key={k} value={s.id}>{s.nombre} {s.tags}</option>)}
                                     </Select>
                                 </InputGroup>
@@ -218,7 +201,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                             Galeria
                         </Heading>
 
-                        <RadioGroup defaultValue='1' name="imagen_name">
+                        <RadioGroup defaultValue={postEditar?.imagen_name} name="imagen_name">
                             <SimpleGrid minChildWidth='250px' spacing='10px'>
                                 {!!archivos && archivos.map((dir, k) => {
                                     return (
