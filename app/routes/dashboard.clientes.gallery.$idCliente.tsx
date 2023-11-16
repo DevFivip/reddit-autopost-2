@@ -20,6 +20,7 @@ import { Toast, useToast } from '@chakra-ui/react';
 
 export const obtenerArchivosEnCarpeta = (rutaCarpeta: string): string[] => {
     // Obtiene la lista de archivos en la carpeta
+    console.log(rutaCarpeta)
     if (rutaCarpeta === null) {
         return []
     }
@@ -32,8 +33,10 @@ export const obtenerArchivosEnCarpeta = (rutaCarpeta: string): string[] => {
             return fs.statSync(rutaCompleta).isFile();
         });
 
+        console.log(archivos);
         return archivosFiltrados;
-    } catch (error) {
+    } catch (error) {f
+        console.log(error);
         return [];
     }
 }
@@ -42,8 +45,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     const id = params.idCliente as string;
     const user: AuthUser | null = await getAutorizeUser(request)
     if (user === null) throw new Error('Usuario no autenticado')
-
-
 
     const carpetaEjemplo = `./public/uploads/${params.idCliente}`;
     const assets = `/public/uploads/${params.idCliente}`;

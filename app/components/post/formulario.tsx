@@ -70,6 +70,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
 
     useEffect(() => {
         const res: any = obtenerArchivosEnCarpeta(`./public/uploads/${idCliente}`)
+        console.log(res)
         setArchivos(res);
     }, [idCliente]);
 
@@ -156,6 +157,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
     };
     return (
         <>
+        <pre>ID CLIENTE; {idCliente}</pre>
             <VisuallyHiddenInput
                 type="number"
                 id="user_id"

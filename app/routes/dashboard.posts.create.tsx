@@ -70,7 +70,7 @@ export default function DashboardPostCreate() {
 
     // console.log(user,subreddits,customers);
     return (<>
-        <pre>{JSON.stringify(state)}</pre>
+
         <Form method="post" encType='multipart/form-data'>
             <ComponentPostFormulario modoEdicion={false} usuario={user} subreddits={subreddits} customers={customers} changeState={setState} formState={state} />
             {/* <ComponentPostFormulario2 /> */}
