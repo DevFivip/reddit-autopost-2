@@ -18,6 +18,8 @@ import {
     ListItem,
 } from "@chakra-ui/react";
 
+import { useEffect } from 'react'
+
 import { MdOutlineEmail } from "react-icons/md";
 
 import { BsPerson, BsReddit, BsImage, BsTelegram } from "react-icons/bs";
@@ -27,6 +29,9 @@ import { AuthUser } from "prisma/types/user";
 import { UpdatePost } from "prisma/types/post";
 import { useState } from "react";
 import { Customer, Subreddit } from "@prisma/client";
+import { formFile } from "~/routes/dashboard.posts.create";
+import { ComponentClientGallery } from "../gallery/componentClienteGallery";
+import { obtenerArchivosEnCarpeta } from "~/routes/dashboard.clientes.gallery.$idCliente";
 
 interface TypeComponentPostFormulario {
     modoEdicion: boolean;
@@ -34,6 +39,8 @@ interface TypeComponentPostFormulario {
     usuario: AuthUser | null;
     subreddits: Subreddit[];
     customers: Customer[];
+    changeState: Function;
+    formState: formFile;
 }
 
 export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
@@ -41,15 +48,15 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
     postEditar,
     usuario,
     subreddits,
-    customers
-
+    customers,
+    changeState,
+    formState
 }) => {
 
     interface TypeFile {
         file: string | null
         previewUrl: ArrayBuffer | string | null
         fileType: string | null
-
     }
 
     const [state, setState] = useState<TypeFile>({
@@ -57,6 +64,41 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
         previewUrl: null,
         fileType: null,
     });
+
+    const [idCliente, setIdCliente] = useState<string | null>(null);
+    const [archivos, setArchivos] = useState<[]>([]);
+
+    useEffect(() => {
+        const res: any = obtenerArchivosEnCarpeta(`./public/uploads/${idCliente}`)
+        setArchivos(res);
+    }, [idCliente]);
+
+    const handleTitulo = (titulo: string) => {
+        changeState({
+            ...formState,
+            titulo: titulo.toUpperCase()
+        })
+    }
+    const handleContenido = (contenido: string) => {
+
+        console.log(formState);
+        const state = { ...formState, contenido }
+        changeState(state);
+
+        console.log('NUEVO', formState);
+
+    }
+    const handleFile = (e: any) => {
+        const media_file = e.target.files;
+        console.log(e.target)
+
+        changeState({
+            ...formState,
+            media_file
+        })
+
+        console.log(formState)
+    }
 
     const handleInputChange = (e: any): void => {
         // console.log(e)
@@ -150,7 +192,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                         name="titulo"
                                         id="titulo"
                                         defaultValue={postEditar?.titulo || ""}
-                                        onChange={handleInputChange}
+                                        onChange={(e) => { handleTitulo(e.target.value) }}
                                     />
                                 </InputGroup>
                             </FormControl>
@@ -163,7 +205,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                         name="contenido"
                                         id="contenido"
                                         defaultValue={postEditar?.contenido || ""}
-                                        onChange={handleInputChange}
+                                        onChange={(e) => { handleContenido(e.target.value) }}
                                     />
                                 </InputGroup>
                             </FormControl>
@@ -185,7 +227,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                             <FormControl id="customer_id">
                                 <FormLabel>Cliente</FormLabel>
                                 <InputGroup>
-                                    <Select placeholder="Seleccione Cliente" name="customer_id">
+                                    <Select placeholder="Seleccione Cliente" name="customer_id" onChange={(e) => { setIdCliente(e.target.value) }}>
                                         {customers.map((c, k) => <option key={k} value={c.id}>{c.firstName} {c.lastName} {c.tags}</option>)}
                                     </Select>
                                 </InputGroup>
@@ -201,7 +243,12 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                         type="datetime-local"
                                         name="postedAt"
                                         defaultValue={postEditar?.postedAt || ""}
-                                        onChange={handleInputChange}
+                                        onChange={<Input
+                                            type="datetime-local"
+                                            name="postedAt"
+                                            defaultValue={postEditar?.postedAt || ""}
+                                            onChange={handleInputChange}
+                                        />}
                                     />
                                 </InputGroup>
                             </FormControl>
@@ -233,16 +280,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                             </Heading>
 
 
-                            <FormControl id="">
-                                <FormLabel>Selecciona Archivo Media</FormLabel>
-                                <InputGroup>
-                                    <Input
-                                        type="file"
-                                        accept="image/*,video/*"
-                                        onChange={handleFileChange}
-                                    />
-                                </InputGroup>
-                            </FormControl>
+                            <ComponentClientGallery archivos={archivos} idCliente={idCliente} />
 
                             <Box boxSize='sm'>
                                 <VStack>
