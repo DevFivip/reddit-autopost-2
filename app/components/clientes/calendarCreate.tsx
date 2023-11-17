@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { Box, Heading, Text, Button, useDisclosure, Modal, ModalOverlay, ModalCloseButton, ModalBody, ModalContent, ModalHeader, FormControl, FormLabel, Input, ModalFooter, Stack } from '@chakra-ui/react'
 import { Form } from '@remix-run/react'
@@ -14,16 +14,26 @@ import interactionPlugin from '@fullcalendar/interaction'
 
 import '../../utils/styles.css';
 
-
+const getEvents = async (idCliente) => {
+    const res = await fetch('/dashboard/clientes/calendar/get/' + idCliente)
+    return await res.json();
+}
 
 
 export const CalendarCreate = ({ idCliente }) => {
+
+    const [events, setEvents] = useState([]);
+    useEffect(() => {
+        (async () => {
+            const e = await getEvents(idCliente)
+            setEvents(e);
+        })()
+    }, []);
 
     return (
         <>
             <Stack spacing={4} direction='row' align='center' mb={5}>
                 <ModalCreateCronograma idCliente={idCliente} />
-
             </Stack>
             <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -39,41 +49,7 @@ export const CalendarCreate = ({ idCliente }) => {
                 dayMaxEvents={true}
                 height={700}
                 eventBorderColor='cian'
-
-                events={[
-                    {
-                        "color": 'cian',
-                        "title": "Event 1 Adolfo - Juana Jimenez r/cupc",
-                        "start": "2023-11-16T10:00:00",
-                        "end": "2023-11-16T10:30:00"
-                    },
-                    {
-                        "color": 'black',
-                        "title": "Event 2",
-                        "start": "2023-11-16T10:30:00",
-                        "end": "2023-11-16T11:00:00"
-                    },
-                    {
-                        "title": "Event 3",
-                        "start": "2023-11-16T11:00:00",
-                        "end": "2023-11-16T11:30:00"
-                    },
-                    {
-                        "title": "Event 4",
-                        "start": "2023-11-16T12:00:00",
-                        "end": "2023-11-16T12:30:00"
-                    }, {
-                        "title": "Event 5",
-                        "start": "2023-11-16T13:00:00",
-                        "end": "2023-11-16T13:30:00"
-                    },
-                    {
-                        color: "black",
-                        "title": "Event 10",
-                        "start": "2023-11-08",
-                        "end": "2023-11-10"
-                    }
-                ]}
+                events={events}
             />
 
         </>
@@ -98,8 +74,8 @@ function ModalCreateCronograma({ idCliente }) {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Form method='post' action={`/dashboard/clientes/calendar/${idCliente}`}>
-                            <Button type='submit' colorScheme='blue' mr={3}>
+                        <Form method='post' action={`/dashboard/clientes/calendar/${idCliente}`} onSubmit={() => onClose()}>
+                            <Button type='submit' colorScheme='blue' mr={3} >
                                 Crear Actualizar Cronogramas
                             </Button>
                         </Form>

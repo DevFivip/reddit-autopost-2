@@ -10,59 +10,15 @@ import { getAutorizeUser } from '~/middlewares/getAutorizeUser';
 import { AuthUser } from 'prisma/types/user';
 
 import { CalendarCreate } from '~/components/clientes/calendarCreate';
+import { getAssignSubreddits } from 'prisma/subreddit';
+import { makeShuffelCalendar } from '~/utils/makeShuffleCalendar';
+import { create, remove } from 'prisma/events';
 
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
     const idCliente = params.idCliente as string;
     const user: AuthUser | null = await getAutorizeUser(request)
     if (user === null) throw new Error('Usuario no autenticado')
-
-
-    // Lista de frutas
-    var frutas = [
-        "Manzana", "Plátano", "Fresa", "Uva", "Kiwi",
-        "Piña", "Naranja", "Mango", "Melocotón", "Sandía",
-        "Papaya", "Ciruela", "Pera", "Granada", "Arándano",
-        "Cereza", "Limón", "Frambuesa", "Mandarina", "Pomelo",
-        "Mora", "Guayaba", "Higo", "Pepino", "Carambola",
-        "Maracuyá", "Melón", "Acerola", "Grosella", "Kiwano"
-    ];
-
-    // Función para generar combinaciones sin repetir frutas en días consecutivos
-    function generarCombinacionesSinRepetir(dias, frutas) {
-        var combinaciones = [];
-
-        for (var i = 1; i <= dias; i++) {
-            var combinacionDia = [];
-
-            // Copiar la lista de frutas para no modificar la original
-            var frutasDisponibles = frutas.slice();
-
-            while (combinacionDia.length < 5) {
-                var frutaAleatoria =
-                    frutasDisponibles[Math.floor(Math.random() * frutasDisponibles.length)];
-
-                // Agregar la fruta al día actual y quitarla de las disponibles
-                combinacionDia.push(frutaAleatoria);
-                frutasDisponibles.splice(frutasDisponibles.indexOf(frutaAleatoria), 1);
-            }
-
-            combinaciones.push({
-                dia: i,
-                frutas: combinacionDia
-            });
-        }
-
-        return combinaciones;
-    }
-
-    // Generar combinaciones para 30 días sin repetir frutas
-    var combinacionesPara30DiasSinRepetir = generarCombinacionesSinRepetir(30, frutas);
-
-    // Mostrar las combinaciones en la consola
-    console.log(combinacionesPara30DiasSinRepetir);
-
-
 
     return { user, idCliente };
 }
@@ -82,20 +38,23 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             break;
 
         case "POST":
-            // const getCurrentUnixTimestamp = () => {
-            //     return Math.floor(new Date().getTime() / 1000);
-            // }
+            const customer_id = parseInt(params.idCliente as string);
 
-            // const uploadHandler = unstable_createFileUploadHandler({
-            //     avoidFileConflicts: true,
-            //     maxPartSize: 5_000_000,
-            //     directory: `./public/uploads/${params.idCliente}`,
-            //     file: ({ filename }) => `${getCurrentUnixTimestamp()}_${filename}`,
-            // });
+            const asignSubreddits = (await getAssignSubreddits(customer_id)).map((as) => as.subreddit_id)
+            // console.log(asignSubreddits)
+            const calendar: any[] = makeShuffelCalendar(asignSubreddits);
+            calendar.map((e) => {
+                e.customer_id = customer_id;
+                e.status = 1;
+                e.fechaAt = new Date(e.fecha);
+                delete e.fecha;
+                return e
+            })
+            
+            await remove(customer_id);
+            await create(calendar);
 
-
-            // await unstable_parseMultipartFormData(request, uploadHandler);
-
+            return redirect(`/dashboard/clientes/calendar/${params.idCliente}`);
 
             break;
         default:
@@ -103,6 +62,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
     }
 
-    return redirect(`/dashboard/clientes`);
+
 
 };

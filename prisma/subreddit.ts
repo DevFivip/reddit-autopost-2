@@ -67,3 +67,11 @@ export const remove = async (id: number): Promise<Subreddit> => {
         },
     });
 };
+
+export const getAssignSubreddits = async (customer_id: number): Promise<CustomerOnSubreddit[]> => {
+    return await db.customerOnSubreddit.findMany({
+        where: {
+            customer_id,
+        },
+    });
+};

@@ -96,7 +96,7 @@ export default function DashboardPostsIndexLayout() {
                 <Td>{p.contenido}</Td>
                 <Td><Link to={`/dashboard/clientes/${p?.customer?.id}`}>{p?.customer?.firstName} {p?.customer?.lastName}</Link></Td>
                 <Td>{dateFormat(p.postedAt)}</Td>
-                <Td>  {p.status ? <Badge colorScheme='red'>{'Pendiente'}</Badge> : <Badge colorScheme='green'>{'Pendiente'}</Badge>}</Td>
+                <Td>  {p.status ? <Badge colorScheme='red'>{'Pendiente'}</Badge> : <Badge colorScheme='green'>{'Completo'}</Badge>}</Td>
                 <Td isNumeric >
                   <ButtonGroup gap='4'>
                     <Link to={`${p.id}`}>
