@@ -26,6 +26,4 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     })
 
     return json(_events);
-
-    return { user, idCliente };
 }
