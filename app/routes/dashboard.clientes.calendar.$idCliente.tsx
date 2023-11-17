@@ -69,7 +69,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 
 export default function DashboardCalendarCreate() {
-
     const { user, idCliente } = useLoaderData<typeof loader>();
     return (<CalendarCreate idCliente={idCliente} />);
 }

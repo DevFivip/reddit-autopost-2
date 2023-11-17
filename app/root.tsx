@@ -105,6 +105,7 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <Meta />
+        <style data-fullcalendar />
         <Links />
         {serverStyleData?.map(({ key, ids, css }) => (
           <style

@@ -47,6 +47,7 @@ model Customer {
   Post                Post[]
   Media               Medias[]
   CustomerOnSubreddit CustomerOnSubreddit[]
+  Event               Event[]
 }
 
 model Post {
@@ -57,7 +58,7 @@ model Post {
   contenido         String?
   customer_id       Int
   user_id           Int
-  subreddit_id      Int @default(1)
+  subreddit_id      Int      @default(1)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   postedAt          DateTime
@@ -66,6 +67,7 @@ model Post {
   subreddit Subreddit @relation(fields: [subreddit_id], references: [id])
   customer  Customer  @relation(fields: [customer_id], references: [id])
   user      User      @relation(fields: [user_id], references: [id])
+  Event     Event[]
 
   @@index([customer_id], name: "idx_posts_customer_id")
   @@index([user_id], name: "idx_posts_user_id")
@@ -94,6 +96,7 @@ model Subreddit {
   updatedAt           DateTime              @updatedAt
   CustomerOnSubreddit CustomerOnSubreddit[]
   Post                Post[]
+  Event               Event[]
 }
 
 model CustomerOnSubreddit {
@@ -108,4 +111,22 @@ model CustomerOnSubreddit {
 
   @@index([customer_id], name: "idx_subreddit_customer_id")
   @@index([subreddit_id], name: "idx_subreddit_subreddit_id")
+}
+
+model Event {
+  id           Int       @id @default(autoincrement())
+  customer_id  Int
+  subreddit_id Int
+  post_id      Int?
+  status       Int
+  customer     Customer  @relation(fields: [customer_id], references: [id])
+  subreddit    Subreddit @relation(fields: [subreddit_id], references: [id])
+  fechaAt      DateTime
+  post         Post?     @relation(fields: [post_id], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([customer_id], name: "idx_subreddit_customer_id")
+  @@index([subreddit_id], name: "idx_subreddit_subreddit_id")
+  @@index([post_id], name: "idx_subreddit_post_id")
 }
