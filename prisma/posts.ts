@@ -8,7 +8,7 @@ export const getAll = async (query: any = false): Promise<Post[]> => {
     return await db.post.findMany(query);
 };
 
-export const create = async (post: CreatePost): Promise<Post | Error> => {
+export const create = async (post: CreatePost): Promise<Post> => {
     try {
         return await db.post.create({ data: post });
     } catch (error) {

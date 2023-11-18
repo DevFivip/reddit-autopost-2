@@ -17,6 +17,7 @@ import { Customer, Post, Subreddit } from '@prisma/client';
 import { CreatePost } from 'prisma/types/post';;
 import { Button } from '@chakra-ui/react';
 import { useState } from 'react';
+import { updatePostStatus } from 'prisma/events';
 
 export async function loader({ request }: LoaderFunctionArgs) {
     const user: AuthUser | null = await getAutorizeUser(request)
@@ -43,7 +44,6 @@ export default function DashboardPostCreate() {
 
     // console.log(user,subreddits,customers);
     return (<>
-
         <Form method="post">
             <ComponentPostFormulario modoEdicion={false} usuario={user} subreddits={subreddits} customers={customers} changeState={setState} formState={state} />
         </Form>
@@ -54,7 +54,8 @@ export default function DashboardPostCreate() {
 export const action = async ({ request }: ActionFunctionArgs) => {
 
     const body = await request.formData();
-    const post: CreatePost = {
+
+    const _post: CreatePost = {
         titulo: body.get('titulo') as string,
         contenido: body.get('contenido') as string,
         imagen_name: body.get('imagen_name') as string,
@@ -64,6 +65,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         postedAt: new Date(body.get('postedAt') as string),
     }
 
-    await create(post)
+    const post: Post = await create(_post);
+    await updatePostStatus(post.customer_id, post.subreddit_id, post.postedAt, post.id);
+
     return redirect(`/dashboard/posts`);
 };

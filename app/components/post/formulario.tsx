@@ -62,9 +62,10 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
     formState
 }) => {
 
-
+    const [fecha, setFecha] = useState<string | number | null>(postEditar?.postedAt || null);
     const [idCliente, setIdCliente] = useState<string | number | null>(postEditar?.customer_id || null);
     const [archivos, setArchivos] = useState<[]>([]);
+    const [daySubreddits, setDaySubreddits] = useState<[]>([]);
 
     useEffect(() => {
         (async () => {
@@ -74,8 +75,26 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
         })()
     }, [idCliente]);
 
+    useEffect(() => {
+        (async () => {
+            console.log(fecha, idCliente);
+            const res: any = await getSubredditCalendarAsigned(fecha, idCliente)
+            console.log(res)
+            setDaySubreddits(res);
+        })()
+    }, [fecha]);
+
+
+
+
     const getFiles = async (idCliente: string | number | null) => {
         const response = await fetch(`/dashboard/fileroute/${idCliente}`);
+        const body = await response.json()
+        return body;
+    }
+
+    const getSubredditCalendarAsigned = async (fecha, idCliente) => {
+        const response = await fetch(`/dashboard/clientes/calendar/day?customer_id=${idCliente}&fecha=${fecha}`);
         const body = await response.json()
         return body;
     }
@@ -171,7 +190,8 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                     <Input
                                         type="datetime-local"
                                         name="postedAt"
-                                        defaultValue={dbToInputDateFormat(postEditar?.postedAt)}
+                                        defaultValue={dbToInputDateFormat(fecha)}
+                                        onChange={(e) => { setFecha(e.target.value) }}
                                     />
                                 </InputGroup>
                             </FormControl>
@@ -180,6 +200,8 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                 <FormLabel>Subreddit</FormLabel>
                                 <InputGroup>
                                     <Select placeholder="Seleccione Subreddit" name="subreddit_id" defaultValue={postEditar?.subreddit_id || ''}>
+                                        {daySubreddits.map((ds, i) => <option key={i} value={ds.subreddit_id}>{ds.subreddit.nombre} {ds.subreddit.tags}</option>)}
+                                        <option value={'null'}>------------------------------------------------------------</option>
                                         {subreddits.map((s, k) => <option key={k} value={s.id}>{s.nombre} {s.tags}</option>)}
                                     </Select>
                                 </InputGroup>
@@ -196,7 +218,6 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                     overflow="hidden"
                 >
                     <Box m={8}>
-
                         <Heading as={"h2"} size={"1x"}>
                             Galeria
                         </Heading>

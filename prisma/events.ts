@@ -14,9 +14,9 @@ const db = new PrismaClient();
 export const findByCustomerId = async (id: number) => {
     return await db.event.findMany({
         include: {
-            post:true,
-            customer:true,
-            subreddit:true,
+            post: true,
+            customer: true,
+            subreddit: true,
         },
         where: {
             customer_id: id,
@@ -85,4 +85,60 @@ export const remove = async (id: number): Promise<any> => {
         await db.$disconnect(); // Cierra la conexión de Prisma
     }
 
+};
+
+
+export const findByPerDay = async (id: number, fecha: string) => {
+    console.log(fecha)
+
+    const _fecha = fecha.split('T');
+    console.log(_fecha)
+    const fechaA = _fecha[0] + 'T00:00:00.999Z'
+    const fechaB = _fecha[0] + 'T23:59:59.999Z'
+
+
+    const fechaInicio = new Date(fechaA);
+
+    const fechaFin = new Date(fechaB);
+
+    return await db.event.findMany({
+        include: {
+            post: true,
+            customer: true,
+            subreddit: true,
+        },
+        where: {
+            customer_id: id,
+            fechaAt: {
+                gte: fechaInicio,
+                lte: fechaFin,
+            },
+            post_id: null,
+        },
+    });
+};
+
+export const updatePostStatus = async (customer_id: number, subreddit_id: number, fecha: Date, post_id: number): Promise<Any> => {
+
+    const fechaConsulta = new Date(fecha);
+    const fechaInicio = new Date(fechaConsulta);
+    fechaInicio.setHours(0, 0, 0, 0); // Establecer la hora a las 00:00:00
+
+    const fechaFin = new Date(fechaConsulta);
+    fechaFin.setHours(23, 59, 59, 999); // Establecer la hora a las 23:59:59.999
+
+
+    return await db.event.updateMany({
+        where: {
+            customer_id: customer_id,
+            subreddit_id: subreddit_id,
+            fechaAt: {
+                gte: fechaInicio,
+                lte: fechaFin,
+            },
+        },
+        data: {
+            post_id: post_id,
+        },
+    });
 };
