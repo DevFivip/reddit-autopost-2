@@ -99,7 +99,6 @@ export default function DashboardPostsIndexLayout() {
             <Tbody>
               {posts.map((p, i) => <Tr key={i}>
                 <Td><Image
-
                   boxSize='50px'
                   src={`/public/uploads/${p?.customer?.id}/${p?.imagen_name}`}
                   alt={`${p?.customer?.firstName} ${p?.customer?.lastName}`}
@@ -109,10 +108,7 @@ export default function DashboardPostsIndexLayout() {
                 <Td><Link to={`/dashboard/clientes/${p?.customer?.id}`}>{p?.customer?.firstName} {p?.customer?.lastName}</Link></Td>
                 <Td>{dateFormat(p.postedAt)}</Td>
                 <Td>
-
-
                   {renderSwitch(p.status)}
-
                 </Td>
                 <Td isNumeric >
                   <ButtonGroup gap='4'>
