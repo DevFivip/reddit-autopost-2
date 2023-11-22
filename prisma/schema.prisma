@@ -51,18 +51,19 @@ model Customer {
 }
 
 model Post {
-  id                Int      @id @default(autoincrement())
-  titulo            String
-  imagen_name       String?
-  imagen_link_imgur String?
-  contenido         String?
-  customer_id       Int
-  user_id           Int
-  subreddit_id      Int      @default(1)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  postedAt          DateTime
-  status            Boolean  @default(true)
+  id                     Int      @id @default(autoincrement())
+  titulo                 String
+  imagen_name            String?
+  imagen_link_imgur      String?
+  contenido              String?
+  customer_id            Int
+  user_id                Int
+  subreddit_id           Int      @default(1)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  postedAt               DateTime
+  status                 Int      @default(1)
+  reddit_submission_name String?
 
   subreddit Subreddit @relation(fields: [subreddit_id], references: [id])
   customer  Customer  @relation(fields: [customer_id], references: [id])

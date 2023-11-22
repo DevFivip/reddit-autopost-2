@@ -15,6 +15,7 @@ import { Customer, Post, Subreddit } from '@prisma/client';
 import { CreatePost, UpdatePost } from 'prisma/types/post';;
 import { Button } from '@chakra-ui/react';
 import { useState } from 'react';
+import { deletePostStatus, updatePostStatus } from 'prisma/events';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
     const idPost = params.idPost || 0;
@@ -61,7 +62,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     switch (request.method) {
         case 'PUT':
             const body = await request.formData();
-            const post: UpdatePost = {
+
+            const _post: UpdatePost = {
                 id: parseInt(body.get('id') as string),
                 titulo: body.get('titulo') as string,
                 contenido: body.get('contenido') as string,
@@ -72,12 +74,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
                 postedAt: new Date(body.get('postedAt') as string),
             }
 
-            const res = await update(post.id, post);
-            return redirect(`/dashboard/posts/${post.id}`);
+            const res: Post = await update(_post.id, _post);
+            await updatePostStatus(_post.customer_id, _post.subreddit_id, _post.postedAt, _post.id);
+
+            return redirect(`/dashboard/posts/${_post.id}`);
             break;
         case 'DELETE':
+
             const id = params.idPost ? parseInt(params.idPost) : 0;
             const po = await remove(id);
+            await deletePostStatus(id);
             return json(po);
 
             break;

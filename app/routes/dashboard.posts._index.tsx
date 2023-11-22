@@ -68,6 +68,18 @@ export default function DashboardPostsIndexLayout() {
 
   const { posts } = useLoaderData<typeof loader>();
 
+  const renderSwitch = (param: number) => {
+    switch (param) {
+      case 1:
+        return <Badge colorScheme='blue'>{'Pendiente'}</Badge>;
+      case 2:
+        return <Badge colorScheme='green'>{'Correcto'}</Badge>;
+      case 3:
+        return <Badge colorScheme='red'>{'Error'}</Badge>;
+      default:
+        return 'foo';
+    }
+  }
   return (<>
     <Flex color='white'>
       <Box flex='1'>
@@ -96,7 +108,12 @@ export default function DashboardPostsIndexLayout() {
                 <Td>{p.contenido}</Td>
                 <Td><Link to={`/dashboard/clientes/${p?.customer?.id}`}>{p?.customer?.firstName} {p?.customer?.lastName}</Link></Td>
                 <Td>{dateFormat(p.postedAt)}</Td>
-                <Td>  {p.status ? <Badge colorScheme='red'>{'Pendiente'}</Badge> : <Badge colorScheme='green'>{'Completo'}</Badge>}</Td>
+                <Td>
+
+
+                  {renderSwitch(p.status)}
+
+                </Td>
                 <Td isNumeric >
                   <ButtonGroup gap='4'>
                     <Link to={`${p.id}`}>

@@ -1,5 +1,5 @@
 {
-  "include": ["env.d.ts", "**/*.ts", "**/*.tsx", "remix.config.tsx", "remix.config.tsx", "app/services"],
+  "include": ["env.d.ts", "**/*.ts", "**/*.tsx", "remix.config.tsx", "remix.config.tsx", "app/services", "app/utils"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,

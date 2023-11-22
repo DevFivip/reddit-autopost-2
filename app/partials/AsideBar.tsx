@@ -28,7 +28,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Home', icon: FiHome, to: '/dashboard' },
   { name: 'Posts', icon: FiStar, to: '/dashboard/posts' },
   { name: 'Clientes', icon: FiTrendingUp, to: '/dashboard/clientes' },
-  { name: 'Galeria', icon: FiTrendingUp, to: '/dashboard/gallery' },
+  // { name: 'Galeria', icon: FiTrendingUp, to: '/dashboard/gallery' },
   { name: 'Subreddits', icon: FiCompass, to: '/dashboard/subreddits' },
   { name: 'Settings', icon: FiSettings, to: '/dashboard' },
 ]

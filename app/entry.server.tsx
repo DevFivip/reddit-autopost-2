@@ -8,6 +8,7 @@ import type { EntryContext } from '@remix-run/node' // Depends on the runtime yo
 import { ServerStyleContext } from './context'
 import createEmotionCache from './createEmotionCache'
 
+
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,

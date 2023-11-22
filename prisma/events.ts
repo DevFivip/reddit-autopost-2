@@ -118,7 +118,7 @@ export const findByPerDay = async (id: number, fecha: string) => {
     });
 };
 
-export const updatePostStatus = async (customer_id: number, subreddit_id: number, fecha: Date, post_id: number): Promise<Any> => {
+export const updatePostStatus = async (customer_id: number, subreddit_id: number, fecha: Date, post_id: number): Promise<any> => {
 
     const fechaConsulta = new Date(fecha);
     const fechaInicio = new Date(fechaConsulta);
@@ -127,6 +127,7 @@ export const updatePostStatus = async (customer_id: number, subreddit_id: number
     const fechaFin = new Date(fechaConsulta);
     fechaFin.setHours(23, 59, 59, 999); // Establecer la hora a las 23:59:59.999
 
+    const _delete = await deletePostStatus(post_id);
 
     return await db.event.updateMany({
         where: {
@@ -139,6 +140,16 @@ export const updatePostStatus = async (customer_id: number, subreddit_id: number
         },
         data: {
             post_id: post_id,
+        },
+    });
+};
+export const deletePostStatus = async (post_id: number): Promise<any> => {
+    return await db.event.updateMany({
+        where: {
+            post_id: post_id,
+        },
+        data: {
+            post_id: null,
         },
     });
 };
