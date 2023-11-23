@@ -110,8 +110,8 @@ model CustomerOnSubreddit {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  @@index([customer_id], name: "idx_subreddit_customer_id")
-  @@index([subreddit_id], name: "idx_subreddit_subreddit_id")
+  @@index([customer_id], name: "idx_subreddit_on_customer_id")
+  @@index([subreddit_id], name: "idx_subreddit_on_subreddit_id")
 }
 
 model Event {
