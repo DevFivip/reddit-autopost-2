@@ -71,7 +71,7 @@ export default function Index() {
                 Starting at $15/mo
               </Text>
 
-              <Text>{process.env.NODE_ENV}</Text>
+              <Text>{process.env.NODE_ENV} prueba de deploy</Text>
             </Box>
           </Stack>
         </Stack>
