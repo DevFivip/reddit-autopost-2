@@ -4,8 +4,8 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "vite build && vite build --ssr",
-    "dev": "node ./server.mjs",
+    "build": "set NODE_ENV=production && vite build && vite build --ssr",
+    "dev": "set NODE_ENV=production &&  node ./server.mjs",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc",
     "check": "npx remix-serve ./build/index.js"

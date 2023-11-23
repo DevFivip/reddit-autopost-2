@@ -35,7 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (user === null) throw new Error('Usuario no autenticado')
   const query = user.role_id === 1 ? { include: { customer: true, } } : { include: { customer: true, }, where: { user_id: user.id } };
   const posts: Post[] = await getAll(query)
-  console.log(posts)
+  // console.log(posts)
   return ({ posts });
 }
 
@@ -100,7 +100,7 @@ export default function DashboardPostsIndexLayout() {
               {posts.map((p, i) => <Tr key={i}>
                 <Td><Image
                   boxSize='50px'
-                  src={`/public/uploads/${p?.customer?.id}/${p?.imagen_name}`}
+                  src={`${p?.imagen_name}`}
                   alt={`${p?.customer?.firstName} ${p?.customer?.lastName}`}
                 /></Td>
                 <Td>{p.titulo}</Td>

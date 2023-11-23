@@ -25,6 +25,7 @@ export const reddit = (title, url, subreddit, cliente: Customer) => {
             })
             .catch((e) => {
                 console.log("hay un error");
+                console.log({e});
                 suc({ status: false, name: null })
             });
 

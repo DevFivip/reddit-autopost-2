@@ -70,6 +70,8 @@ export default function Index() {
                 transform={'rotate(10deg)'}>
                 Starting at $15/mo
               </Text>
+
+              <Text>{process.env.NODE_ENV}</Text>
             </Box>
           </Stack>
         </Stack>

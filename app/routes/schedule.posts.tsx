@@ -17,8 +17,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         return json({ msg: 'no hay post pendientes' })
     }
 
-    const dir = `uploads/${comming.customer_id}/${comming.imagen_name}`;
+    const dir = comming.imagen_name;
     const img_dir: string = await mark(dir, `u/${comming.customer.reddit_username}`) as string
+
     const imagen_link_imgur = await send(img_dir);
 
     console.log({ img_dir, imagen_link_imgur });

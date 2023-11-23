@@ -1,5 +1,6 @@
 import sharp from "sharp";
 import { __dirname } from "./dirname";
+import { __public } from "./publicdir";
 export const rgbToHex = (rgb) => {
     console.log(rgb)
 
@@ -36,12 +37,13 @@ export const calculatePastelColor = (inputColor) => {
 
     return pastelColor;
 }
-export const mark = (file, text) => {
+export const mark = (file:string, text) => {
+    console.log(file);
     console.log(text);
     return new Promise(async (suc, rej) => {
         const q = file.split('/');
-        // console.log(q);
-        const ImagenPath = `uploads/${q[1]}/mark-${q[2]}`;
+
+        const ImagenPath = `uploads/${q[2]}/mark-${q[3]}`;
         const inputImagePath = __dirname(import.meta.url) + "/../../public/" + file;
         // const outputImagePath = __dirname(import.meta.url) + "/../../public" + ImagenPath;
         const outputImagePath = __dirname(import.meta.url) + "/../../public/" + ImagenPath;

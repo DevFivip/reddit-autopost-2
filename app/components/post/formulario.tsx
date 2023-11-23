@@ -242,7 +242,7 @@ export const ComponentPostFormulario: React.FC<TypeComponentPostFormulario> = ({
                                             >
                                                 <CardBody>
                                                     <Image
-                                                        src={`/public/uploads/${idCliente}/${dir}`}
+                                                        src={`${dir}`}
                                                         alt=''
                                                         maxHeight={'250px'}
                                                     />
